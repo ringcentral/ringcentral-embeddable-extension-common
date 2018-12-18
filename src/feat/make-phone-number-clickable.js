@@ -4,7 +4,6 @@
  * but still, you can add custom behaviors if the config does not meet your needs
  */
 
-import {phoneNumberSelectors} from '../config'
 import {
   dirtyLoop,
   createElementFromHTML,
@@ -77,6 +76,6 @@ function processLink(config) {
   return new LinkHandler(config)
 }
 
-export default () => {
-  phoneNumberSelectors.forEach(processLink)
+export default (config) => {
+  config.phoneNumberSelectors.forEach(processLink)
 }

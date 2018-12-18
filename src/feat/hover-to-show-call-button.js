@@ -5,7 +5,6 @@
  * but still, you can add custom behaviors if the config does not meet your needs
  */
 
-import {hoverShowClickToCallButton} from '../config'
 import _ from 'lodash'
 import {
   dirtyLoop,
@@ -169,6 +168,6 @@ function processHover(config) {
   return new HoverHandler(config)
 }
 
-export default () => {
-  hoverShowClickToCallButton.forEach(processHover)
+export default (config) => {
+  config.hoverShowClickToCallButton.forEach(processHover)
 }
