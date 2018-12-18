@@ -3,7 +3,6 @@
  * but still, you can add custom button if the config does not meet your needs
  */
 
-import {insertClickToCallButton} from '../config'
 import {
   dirtyLoop,
   createCallBtnHtml,
@@ -106,6 +105,6 @@ function processInsert(config) {
   return new insertHandler(config)
 }
 
-export default () => {
-  insertClickToCallButton.forEach(processInsert)
+export default (config) => {
+  config.insertClickToCallButton.forEach(processInsert)
 }
