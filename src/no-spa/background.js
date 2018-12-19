@@ -102,13 +102,12 @@ function getTabFromId(id) {
   return new Promise((resolve) => {
     chrome.tabs.get(id, resolve)
   })
-    .catch(() => {id})
 }
 
 async function onTabEvent(_tab, action) {
   let tab = _.isPlainObject(_tab)
     ? _tab
-    : await getTabFromId(_tab)
+    : await getTabFromId(_tab).catch(() => {})
   let {id} = tab
   if (
     checkTab(tab)
@@ -192,12 +191,9 @@ export default function initBackground(checkTabFunc) {
   })
 
   chrome.windows.onFocusChanged.addListener(function (id) {
-    if (standaloneWindow && standaloneWindow.id !== id) {
-      console.log(standaloneWindow)
-      sendMsgToContent({
-        action: 'widgets-window-state-notify',
-        widgetsFocused: false
-      })
-    }
+    sendMsgToContent({
+      action: 'widgets-window-state-notify',
+      widgetsFocused: !(standaloneWindow && standaloneWindow.id !== id)
+    })
   })
 }

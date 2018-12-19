@@ -175,3 +175,49 @@ export function onClickPhoneNumber(e) {
   let n = p.querySelector('b').textContent.trim()
   callWithRingCentral(n)
 }
+
+
+/**
+ * register event handler which will auto destroy after fisrt run
+ */
+export function once(requestId, callback) {
+  let func = e => {
+    if (
+      e.data &&
+      e.data.requestId &&
+      e.data.requestId === requestId
+    ) {
+      window.removeEventListener('message', func)
+      callback(e.data)
+    }
+  }
+  window.addEventListener('message', func)
+}
+
+export function addRuntimeEventListener(cb) {
+  chrome.runtime.onMessage.addListener(cb)
+}
+
+export async function sendMsgToBackground(msg) {
+  return new Promise(resolve => {
+    chrome.runtime.sendMessage(msg, resolve)
+  })
+}
+
+export function popupBg() {
+  return sendMsgToBackground({
+    action: 'popup'
+  })
+}
+
+export function callWithRingCentralBg(phoneNumber, callAtOnce = true) {
+  popup()
+  sendMsgToBackground({
+    to: 'standalone',
+    data: {
+      type: 'rc-adapter-new-call',
+      phoneNumber,
+      toCall: callAtOnce
+    }
+  })
+}

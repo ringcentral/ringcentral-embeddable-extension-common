@@ -3,10 +3,13 @@
 import initThirdPartyApi from './third-party-api'
 import insertClickToCall from '../feat/insert-click-to-call-button'
 import addHoverEvent from '../feat/hover-to-show-call-button'
+import initStandaloneWidgets from '../feat/init-standalone-widgets'
 import convertPhoneLink from '../feat/make-phone-number-clickable'
 import {
-  popup
+  addRuntimeEventListener,
+  once
 } from '../common/helpers'
+import './style.styl'
 
 function registerService(config) {
 
@@ -22,28 +25,25 @@ function registerService(config) {
   // convert phonenumber text to click-to-dial link
   convertPhoneLink(config)
 
-  // Listen message from background.js to open app window when user click icon.
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.action === 'openAppWindow') {
-        popup()
-      }
-      sendResponse('ok')
-    }
-  )
+  // initStandaloneWidgets button
+  initStandaloneWidgets(config)
 }
 
-let registered = false
-
 export default (config) => {
-  // only when ringcentral widgets ready, start to init chrome extension logic
   return () => {
-    window.addEventListener('message', function (e) {
-      const data = e.data
-      if (data && data.type === 'rc-adapter-pushAdapterState' && registered === false) {
-        registered = true
-        registerService(config)
+    addRuntimeEventListener(
+      function(request, sender, sendResponse) {
+        if (request.to === 'content') {
+          window.postMessage(request.data, '*')
+          let {requestId} = request.data
+          if (requestId) {
+            once(requestId, sendResponse)
+          } else {
+            sendResponse()
+          }
+        }
       }
-    })
+    )
+    registerService(config)
   }
 }
