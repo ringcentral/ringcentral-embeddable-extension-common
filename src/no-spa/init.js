@@ -9,7 +9,6 @@ import {
   addRuntimeEventListener,
   once
 } from '../common/helpers'
-import './style.styl'
 
 function registerService(config) {
 
