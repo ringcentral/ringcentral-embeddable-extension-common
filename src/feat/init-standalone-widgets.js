@@ -41,11 +41,9 @@ export default async () => {
   toggleInitButton(btn, widgetsFocused)
   addRuntimeEventListener(
     function(request, sender, sendResponse) {
-      console.log(request, 'rrrr')
       if (request.action === 'widgets-window-state-notify') {
         toggleInitButton(btn, request.widgetsFocused)
       } else {
-        console.log('get msg now', request)
         window.postMessage(request, '*')
       }
       sendResponse()

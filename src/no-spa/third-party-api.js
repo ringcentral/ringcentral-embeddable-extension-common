@@ -34,24 +34,26 @@ export default async function initThirdPartyApi (config) {
     handleRCEvents
   } = config.thirdPartyServiceConfig(serviceName)
 
+  let inited = false
+
   window.addEventListener('message', (e) => {
     let {data} = e
     if (!data) {
       return
     }
     let {type} = data
-    if (type === 'rc-adapter-pushAdapterState') {
+    if (type === 'rc-adapter-syncPresence') {
       window.rc.postMessage({
         type: 'rc-adapter-register-third-party-service',
         service: services
       })
+      if (!inited) {
+        inited = true
+        window.addEventListener('message', handleRCEvents)
+        config.initThirdParty()
+      }
     }
   })
-
-  // init
-  window.addEventListener('message', handleRCEvents)
-
-  config.initThirdParty()
 
 }
 

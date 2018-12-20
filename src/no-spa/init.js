@@ -12,6 +12,9 @@ import {
 
 function registerService(config) {
 
+  // initStandaloneWidgets button
+  initStandaloneWidgets(config)
+
   // handle contacts sync feature
   initThirdPartyApi(config)
 
@@ -24,8 +27,6 @@ function registerService(config) {
   // convert phonenumber text to click-to-dial link
   convertPhoneLink(config)
 
-  // initStandaloneWidgets button
-  initStandaloneWidgets(config)
 }
 
 export default (config) => {
