@@ -34,9 +34,18 @@ export default async function initThirdPartyApi (config) {
     handleRCEvents
   } = config.thirdPartyServiceConfig(serviceName)
 
-  window.rc.postMessage({
-    type: 'rc-adapter-register-third-party-service',
-    service: services
+  window.addEventListener('message', () => {
+    let {data} = e
+    if (!data) {
+      return
+    }
+    let {type} = data
+    if (type === 'rc-adapter-pushAdapterState') {
+      window.rc.postMessage({
+        type: 'rc-adapter-register-third-party-service',
+        service: services
+      })
+    }
   })
 
   // init
