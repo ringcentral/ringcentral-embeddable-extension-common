@@ -29,6 +29,8 @@ function registerService(config) {
 }
 
 export default (config) => {
+
+  window._rc_is_no_spa = true
   return () => {
     addRuntimeEventListener(
       function(request, sender, sendResponse) {

@@ -63,6 +63,9 @@ export function createElementFromHTML(htmlString) {
 }
 
 export function popup() {
+  if (window._rc_is_no_spa) {
+    return popupBg()
+  }
   document.querySelector('#rc-widget-adapter-frame').contentWindow.postMessage({
     type: 'rc-adapter-syncMinimized',
     minimized: false
@@ -74,6 +77,9 @@ export function popup() {
 }
 
 export function callWithRingCentral(phoneNumber, callAtOnce = true) {
+  if (window._rc_is_no_spa) {
+    return callWithRingCentralBg(phoneNumber, callAtOnce)
+  }
   popup()
   document.querySelector('#rc-widget-adapter-frame').contentWindow.postMessage({
     type: 'rc-adapter-new-call',
