@@ -46,6 +46,7 @@ class LinkHandler {
     if (node.tagName === 'A') {
       node.classList.add('rc-click-to-call')
       node.onclick = e => {
+        e.stopPropagation()
         e.preventDefault()
         callWithRingCentral(txt)
       }
