@@ -34,7 +34,7 @@ export default async function initThirdPartyApi (config) {
     handleRCEvents
   } = config.thirdPartyServiceConfig(serviceName)
 
-  window.addEventListener('message', () => {
+  window.addEventListener('message', (e) => {
     let {data} = e
     if (!data) {
       return
