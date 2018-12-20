@@ -32,7 +32,7 @@ export default async function initThirdPartyApi (config) {
   const {
     services,
     handleRCEvents
-  } = config.thirdPartyServiceConfig()
+  } = config.thirdPartyServiceConfig(serviceName)
 
   window.rc.postMessage({
     type: 'rc-adapter-register-third-party-service',
