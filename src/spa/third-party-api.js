@@ -25,11 +25,17 @@ window.rc = {
 }
 
 export default async function initThirdPartyApi (config) {
-
+  if (!config.thirdPartyServiceConfig) {
+    return
+  }
+  let thirdPartyConfig = config.thirdPartyServiceConfig(serviceName)
+  if (!thirdPartyConfig) {
+    return
+  }
   const {
     services,
     handleRCEvents
-  } = config.thirdPartyServiceConfig(serviceName)
+  } = thirdPartyConfig
 
   window.rc.postMessage({
     type: 'rc-adapter-register-third-party-service',
@@ -39,7 +45,7 @@ export default async function initThirdPartyApi (config) {
   // init
   window.addEventListener('message', handleRCEvents)
 
-  config.initThirdParty()
+  config.initThirdParty && config.initThirdParty()
 
 }
 

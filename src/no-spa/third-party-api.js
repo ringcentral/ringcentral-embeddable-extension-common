@@ -28,11 +28,17 @@ window.rc = {
 }
 
 export default async function initThirdPartyApi (config) {
-
+  if (!config.thirdPartyServiceConfig) {
+    return
+  }
+  let thirdPartyConfig = config.thirdPartyServiceConfig(serviceName)
+  if (!thirdPartyConfig) {
+    return
+  }
   const {
     services,
     handleRCEvents
-  } = config.thirdPartyServiceConfig(serviceName)
+  } = thirdPartyConfig
 
   let inited = false
 
@@ -50,7 +56,7 @@ export default async function initThirdPartyApi (config) {
       if (!inited) {
         inited = true
         window.addEventListener('message', handleRCEvents)
-        config.initThirdParty()
+        config.initThirdParty && config.initThirdParty()
       }
     }
   })
