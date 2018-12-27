@@ -16,8 +16,10 @@ function onClickInitExt() {
   popupBg()
 }
 
-function toggleInitButton(widgetsFocused) {
-  let btn = document.getElementById('rc-init-ext-wrap')
+function toggleInitButton(
+  btn = document.getElementById('rc-init-ext-wrap'),
+  widgetsFocused
+) {
   if (!btn) {
     return
   }
@@ -52,7 +54,7 @@ export default async (config) => {
   addRuntimeEventListener(
     function(request, sender, sendResponse) {
       if (request.action === 'widgets-window-state-notify') {
-        toggleInitButton(request.widgetsFocused)
+        toggleInitButton(undefined, request.widgetsFocused)
       } else {
         window.postMessage(request, '*')
       }
