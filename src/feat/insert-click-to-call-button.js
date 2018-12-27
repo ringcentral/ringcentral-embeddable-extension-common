@@ -16,10 +16,10 @@ class insertHandler {
   constructor(config) {
     this.config = config
     let {
-      urlCheck
+      shouldAct
     } = this.config
     dirtyLoop(
-      urlCheck,
+      shouldAct,
       this.tryAddCallBtn
     )
   }
@@ -55,10 +55,10 @@ class insertHandler {
   tryAddCallBtn = async () => {
     let {href} = location
     let {
-      urlCheck,
+      shouldAct,
       getContactPhoneNumbers
     } = this.config
-    if (!urlCheck(href)) {
+    if (!shouldAct(href)) {
       return
     }
     if (this.isButtonInserted()) {
@@ -106,5 +106,5 @@ function processInsert(config) {
 }
 
 export default (config) => {
-  config.insertClickToCallButton.forEach(processInsert)
+  (config.insertClickToCallButton || []).forEach(processInsert)
 }

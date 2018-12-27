@@ -15,10 +15,10 @@ class LinkHandler {
   constructor(config) {
     this.config = config
     let {
-      urlCheck
+      shouldAct
     } = this.config
     dirtyLoop(
-      urlCheck,
+      shouldAct,
       this.convertLinks,
       this.tryRMEvents
     )
@@ -26,7 +26,7 @@ class LinkHandler {
 
   convertLinks = () => {
     let {href} = location
-    if (!this.config.urlCheck(href)) {
+    if (!this.config.shouldAct(href)) {
       return
     }
     let {selector} = this.config
@@ -78,5 +78,5 @@ function processLink(config) {
 }
 
 export default (config) => {
-  config.phoneNumberSelectors.forEach(processLink)
+  (config.phoneNumberSelectors || []).forEach(processLink)
 }

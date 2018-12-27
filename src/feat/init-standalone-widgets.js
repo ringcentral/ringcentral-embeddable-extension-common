@@ -16,7 +16,11 @@ function onClickInitExt() {
   popupBg()
 }
 
-function toggleInitButton(btn, widgetsFocused) {
+function toggleInitButton(widgetsFocused) {
+  let btn = document.getElementById('rc-init-ext-wrap')
+  if (!btn) {
+    return
+  }
   if (widgetsFocused) {
     btn.classList.remove('rc-show-init')
   } else {
@@ -24,7 +28,7 @@ function toggleInitButton(btn, widgetsFocused) {
   }
 }
 
-export default async () => {
+function initButton() {
   let widgetsFocused = false
   let dom = createElementFromHTML(
     `<div class="rc-init-ext-wrap animate" id="rc-init-ext-wrap">
@@ -39,10 +43,16 @@ export default async () => {
     btn = dom
   }
   toggleInitButton(btn, widgetsFocused)
+}
+
+export default async (config) => {
+  if (config.initCallButton !== false) {
+    initButton()
+  }
   addRuntimeEventListener(
     function(request, sender, sendResponse) {
       if (request.action === 'widgets-window-state-notify') {
-        toggleInitButton(btn, request.widgetsFocused)
+        toggleInitButton(request.widgetsFocused)
       } else {
         window.postMessage(request, '*')
       }

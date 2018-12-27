@@ -25,10 +25,10 @@ class HoverHandler {
   constructor(config) {
     this.config = config
     let {
-      urlCheck
+      shouldAct
     } = this.config
     dirtyLoop(
-      urlCheck,
+      shouldAct,
       this.addHover,
       this.tryRMEvents
     )
@@ -38,7 +38,7 @@ class HoverHandler {
 
   addHover = () => {
     let {href} = location
-    if (!this.config.urlCheck(href)) {
+    if (!this.config.shouldAct(href)) {
       return
     }
     document.addEventListener('mouseenter', this.handleAddRCBtn, true)
@@ -169,5 +169,5 @@ function processHover(config) {
 }
 
 export default (config) => {
-  config.hoverShowClickToCallButton.forEach(processHover)
+  (config.hoverShowClickToCallButton || []).forEach(processHover)
 }
