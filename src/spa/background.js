@@ -46,6 +46,35 @@ chrome.pageAction.onClicked.addListener(function (tab) {
   }
 })
 
+function parseQuery(queryString) {
+  let query = {}
+  let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&')
+  for (var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i].split('=')
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '')
+  }
+  return query
+}
+
+function oauth(data) {
+  return new Promise((resolve, reject) => {
+    chrome.identity.launchWebAuthFlow(data, (url) => {
+      let q = url.split('?')[1]
+      q = parseQuery(q)
+      let {
+        code,
+        error,
+        error_description
+      } = q
+      if (code) {
+        resolve(code)
+      } else if (error) {
+        reject(`${error}:${error_description}`)
+      }
+    })
+  })
+}
+
 export default function initBackground(checkTabFunc) {
   checkTab = checkTabFunc
   chrome.tabs.onCreated.addListener(cb)
@@ -60,6 +89,24 @@ export default function initBackground(checkTabFunc) {
         console.log(response)
       })
       return
+    }
+  })
+  chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+    let {
+      data,
+      action
+    } = request
+    if (action === 'oauth') {
+      let res = await oauth(data)
+        .catch(e => {
+          return e
+        })
+      res = res && res.message
+        ? {
+          error: res.message
+        }
+        : res
+      sendResponse(res)
     }
   })
 }

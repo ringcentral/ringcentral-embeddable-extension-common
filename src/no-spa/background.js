@@ -130,6 +130,36 @@ async function onTabEvent(_tab, action) {
   }
 }
 
+
+function parseQuery(queryString) {
+  let query = {}
+  let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&')
+  for (var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i].split('=')
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '')
+  }
+  return query
+}
+
+function oauth(data) {
+  return new Promise((resolve, reject) => {
+    chrome.identity.launchWebAuthFlow(data, (url) => {
+      let q = url.split('?')[1]
+      q = parseQuery(q)
+      let {
+        code,
+        error,
+        error_description
+      } = q
+      if (code) {
+        resolve(code)
+      } else if (error) {
+        reject(`${error}:${error_description}`)
+      }
+    })
+  })
+}
+
 export default function initBackground(checkTabFunc) {
   checkTab = checkTabFunc
   chrome.tabs.onCreated.addListener(tab => {
@@ -160,7 +190,19 @@ export default function initBackground(checkTabFunc) {
       data,
       action
     } = request
-    if (to === 'standalone') {
+    if (action === 'oauth') {
+      let res = await oauth(data)
+        .catch(e => {
+          return e
+        })
+      res = res && res.message
+        ? {
+          error: res.message
+        }
+        : res
+      sendResponse(res)
+    }
+    else if (to === 'standalone') {
       let res = await sendMsgToStandAlone(data)
       sendResponse(res)
     } else if (to === 'content') {
