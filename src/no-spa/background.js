@@ -184,30 +184,35 @@ export default function initBackground(checkTabFunc) {
     }
   })
 
-  chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     let {
       to,
       data,
       action
     } = request
     if (action === 'oauth') {
-      let res = await oauth(data)
+      oauth(data)
+        .then(res => {
+          res = res && res.message
+            ? {
+              error: res.message
+            }
+            : res
+          sendResponse(res)
+        })
         .catch(e => {
           return e
         })
-      res = res && res.message
-        ? {
-          error: res.message
-        }
-        : res
-      sendResponse(res)
+      return true
     }
     else if (to === 'standalone') {
-      let res = await sendMsgToStandAlone(data)
-      sendResponse(res)
+      sendMsgToStandAlone(data)
+        .then(res => sendResponse(res))
+      return true
     } else if (to === 'content') {
-      let res = await sendMsgToContent(data)
-      sendResponse(res)
+      sendMsgToContent(data)
+        .then(res => sendResponse(res))
+      return true
     } else if (action === 'popup') {
       popup()
     } else if (action === 'check-window-opened') {
@@ -215,7 +220,6 @@ export default function initBackground(checkTabFunc) {
         widgetsFocused: !!standaloneWindow
       })
     } else if (action === 'check-window-focused') {
-      console.log(standaloneWindow)
       sendResponse({
         widgetsFocused: standaloneWindow && standaloneWindow.focused
       })

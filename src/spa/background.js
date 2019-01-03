@@ -91,22 +91,26 @@ export default function initBackground(checkTabFunc) {
       return
     }
   })
-  chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     let {
       data,
       action
     } = request
     if (action === 'oauth') {
-      let res = await oauth(data)
+      oauth(data)
+        .then(res => {
+          res = res && res.message
+            ? {
+              error: res.message
+            }
+            : res
+          sendResponse(res)
+        })
         .catch(e => {
           return e
         })
-      res = res && res.message
-        ? {
-          error: res.message
-        }
-        : res
-      sendResponse(res)
+      return true
     }
   })
 }
