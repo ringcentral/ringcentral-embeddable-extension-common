@@ -11,6 +11,12 @@ import {
   callWithRingCentral
 } from '../common/helpers'
 
+function recreateNode(el) {
+  let nc = el.cloneNode(true)
+  el.parentNode.replaceChild(nc, el)
+  return nc
+}
+
 class LinkHandler {
   constructor(config) {
     this.config = config
@@ -44,6 +50,7 @@ class LinkHandler {
       return
     }
     if (node.tagName === 'A') {
+      node = recreateNode(node, true)
       node.classList.add('rc-click-to-call')
       node.onclick = e => {
         e.stopPropagation()
