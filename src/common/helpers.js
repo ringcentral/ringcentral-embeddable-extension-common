@@ -21,7 +21,7 @@ function getHost() {
 }
 
 export function formatPhone(phone) {
-  return formatNumber(phone, phoneFormat)
+  return formatNumber(phone, phoneFormat) || phone
 }
 
 let msgHandler1
