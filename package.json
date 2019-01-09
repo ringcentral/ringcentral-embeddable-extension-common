@@ -4,7 +4,7 @@
   "description": "Cli tool to create a RingCentral Embeddable Voice chrome extension for sites.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zxdong262/ringcentral-embeddable-extension-common.git"
+    "url": "git+https://github.com/ringcentral/ringcentral-embeddable-extension-common.git"
   },
   "keywords": [
     "ringcentral",
@@ -15,9 +15,9 @@
   "author": "Drake Zhao <drake.zhao@ringcentral.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zxdong262/ringcentral-embeddable-extension-common/issues"
+    "url": "https://github.com/ringcentral/ringcentral-embeddable-extension-common/issues"
   },
-  "homepage": "https://github.com/zxdong262/ringcentral-embeddable-extension-common#readme",
+  "homepage": "https://github.com/ringcentral/ringcentral-embeddable-extension-common#readme",
   "devDependencies": {
     "babel-eslint": "10.0.1",
     "eslint": "4.19.1",
