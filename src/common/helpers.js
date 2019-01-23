@@ -2,6 +2,7 @@ import {parseNumber} from 'libphonenumber-js'
 import _ from 'lodash'
 import RCLOGOSVG from './rc-logo'
 import {formatNumber} from 'libphonenumber-js'
+import {callIconSvg, smsIconSvg, rcIconSvg} from './rc-icons'
 
 export const RCBTNCLS = 'call-with-ringccentral-btn'
 export const RCBTNCLS2 = 'call-with-rc-btn'
@@ -159,14 +160,30 @@ export function createPhoneList(phoneNumbers, cls = 'rc-call-dds') {
   `
 }
 
-export const createCallBtnHtml = (cls = '', phoneNumbers) => {
+export const createCallBtnHtml = (
+  cls = '',
+  phoneNumbers = [],
+  options = {}
+) => {
   let cls2 = phoneNumbers && phoneNumbers.length > 1
     ? 'rc-has-dd'
     : ''
   return `
     <span class="${RCBTNCLS} rc-mg1r ${cls} ${cls2}">
-      <span class="rc-iblock rc-mg1r">Call with</span>
-      <img src="${RCLOGOSVG}" class="rc-iblock" />
+      <div class="rc-widget-c2d-logo">
+        ${rcIconSvg()}
+      </div>
+      <div class="rc-widget-action-icon rc-widget-c2d-icon" title="Call with RingCentral">
+        ${callIconSvg()}
+      </div>
+      ${
+        options.sms
+        ? `<div class="rc-widget-c2d-separator-line"></div>
+          <div class="rc-widget-action-icon rc-widget-c2sms-icon" title="SMS with RingCentral">
+          ${smsIconSvg()}
+        </div>`
+        : ''
+      }
       ${createPhoneList(phoneNumbers)}
     </span>
   `

@@ -5,83 +5,19 @@
  */
 
 import {
-  dirtyLoop,
-  createElementFromHTML,
-  checkPhoneNumber,
   callWithRingCentral
 } from '../common/helpers'
 
-function recreateNode(el) {
-  let nc = el.cloneNode(true)
-  el.parentNode.replaceChild(nc, el)
-  return nc
-}
-
-class LinkHandler {
-  constructor(config) {
-    this.config = config
-    let {
-      shouldAct
-    } = this.config
-    dirtyLoop(
-      shouldAct,
-      this.convertLinks,
-      this.tryRMEvents
-    )
-  }
-
-  convertLinks = () => {
-    let {href} = location
-    if (!this.config.shouldAct(href)) {
-      return
-    }
-    let {selector} = this.config
-    document
-      .querySelectorAll(selector)
-      .forEach(this.handleText)
-  }
-
-  handleText = (node) => {
-    if (node.querySelector('.rc-click-to-call') || node.classList.contains('rc-click-to-call')) {
-      return
-    }
-    let txt = (node.textContent || '').trim()
-    if (!checkPhoneNumber(txt)) {
-      return
-    }
-    if (node.tagName === 'A') {
-      node = recreateNode(node, true)
-      node.classList.add('rc-click-to-call')
-      node.onclick = e => {
-        e.stopPropagation()
-        e.preventDefault()
-        callWithRingCentral(txt)
-      }
-      return
-    }
-    while (node.firstChild) {
-      node.removeChild(node.firstChild)
-    }
-    let elem = createElementFromHTML(
-      `
-      <a
-        href="tel:${txt}"
-        class="rc-click-to-call"
-        title="click to call ${txt}"
-      >${txt}</a>
-      `
-    )
-    elem.onclick = e => {
-      e.preventDefault()
-      callWithRingCentral(txt)
-    }
-    node.appendChild(elem)
-  }
-
-}
+import C2D from '../common/click-to-dial-inject'
 
 function processLink(config) {
-  return new LinkHandler(config)
+  let conf = {
+    onCallClick: callWithRingCentral,
+    isTelNode: (node) => {
+      return node.matches ? node.matches(config.selector) : false
+    }
+  }
+  return new C2D(conf)
 }
 
 export default (config) => {
