@@ -13,9 +13,13 @@ import C2D from '../common/click-to-dial-inject'
 function processLink(config) {
   let conf = {
     onCallClick: callWithRingCentral,
+    selector: config.selector,
     isTelNode: (node) => {
       return node.matches ? node.matches(config.selector) : false
-    }
+    },
+    getPhoneNumber: config.getPhoneNumber || (node => {
+      return node.textContent.trim()
+    })
   }
   return new C2D(conf)
 }

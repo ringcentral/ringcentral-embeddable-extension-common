@@ -5,6 +5,7 @@
 import {findNumbers} from 'libphonenumber-js'
 import './click-to-dial-inject.styl'
 import {callIconSvg, smsIconSvg, rcIconSvg} from './rc-icons'
+import {findParentBySel} from './helpers'
 
 const NODE_TEYPE_EXCLUDES = ['STYLE', 'OPTION', 'SCRIPT', 'INPUT', 'TEXT', 'TEXTAREA']
 
@@ -15,8 +16,7 @@ function isTelLinkNode(node) {
 function getAllNumberNodes(rootNode, isTelNode = isTelLinkNode) {
   let numberNodes = []
   if (
-    !rootNode ||
-    NODE_TEYPE_EXCLUDES.includes(rootNode.tagName)
+    !rootNode
   ) {
     return numberNodes
   }
@@ -56,8 +56,12 @@ class ClickToDialInject {
   constructor({
     onSmsClick,
     onCallClick,
-    isTelNode = isTelLinkNode
+    isTelNode = isTelLinkNode,
+    selector,
+    getPhoneNumber
   }) {
+    this.getPhoneNumber = getPhoneNumber
+    this.selector = selector
     this._onSmsClick = onSmsClick
     this._onCallClick = onCallClick
     this.isTelNode = isTelNode
@@ -203,12 +207,8 @@ class ClickToDialInject {
     }
     e.rcHandled = true
     this._c2dNumberHover = true
-    if (e.currentTarget.tagName === 'A') {
-      const telLink = e.currentTarget.href
-      this._currentNumber = e.currentTarget.textContent.trim() ||telLink.replace(/[^\d+*-]/g, '')
-    } else {
-      this._currentNumber = e.currentTarget.getAttribute(RC_C2D_ELEM_ATTRIBUTE) || e.currentTarget.textContent.trim()
-    }
+    let el = findParentBySel(e.currentTarget, this.selector)
+    this._currentNumber = this.getPhoneNumber(el)
     if (this._currentNumber) {
       const rect = e.currentTarget.getBoundingClientRect()
       this._c2dMenuEl.style.top = `${rect.top -
