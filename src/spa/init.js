@@ -5,7 +5,7 @@ import insertClickToCall from '../feat/insert-click-to-call-button'
 import addHoverEvent from '../feat/hover-to-show-call-button'
 import convertPhoneLink from '../feat/make-phone-number-clickable'
 import {
-  popup
+  popup, isIframe, sendMsgToRCIframe
 } from '../common/helpers'
 
 function registerService(config) {
@@ -38,6 +38,16 @@ let registered = false
 export default (config) => {
   // only when ringcentral widgets ready, start to init chrome extension logic
   return () => {
+    window.addEventListener('message', function (e) {
+      const data = e.data
+      if (data && data.type === 'rc-message-proxy') {
+        sendMsgToRCIframe(data.data)
+      }
+    })
+    if (isIframe) {
+      registered = true
+      registerService(config)
+    }
     window.addEventListener('message', function (e) {
       const data = e.data
       if (data && data.type === 'rc-adapter-pushAdapterState' && registered === false) {

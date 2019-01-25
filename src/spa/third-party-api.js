@@ -11,16 +11,14 @@
  */
 
 import {thirdPartyConfigs} from '../common/app-config'
+import {sendMsgToRCIframe} from '../common/helpers'
+
 let {
   serviceName
 } = thirdPartyConfigs
 
 window.rc = {
-  postMessage: data => {
-    document.querySelector('#rc-widget-adapter-frame')
-      .contentWindow
-      .postMessage(data, '*')
-  },
+  postMessage: sendMsgToRCIframe,
   rcLogined: false
 }
 

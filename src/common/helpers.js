@@ -13,8 +13,17 @@ export const lsKeys = {
   apiKeyLSKey: APIKEYLS
 }
 export const host = getHost()
+export const isIframe = inIframe ()
 
 const phoneFormat = 'National'
+
+function inIframe () {
+  try {
+    return window.self !== window.top
+  } catch (e) {
+    return true
+  }
+}
 
 function getHost() {
   let {host, protocol} = location
@@ -63,15 +72,26 @@ export function createElementFromHTML(htmlString) {
   return div.firstChild
 }
 
+export function sendMsgToRCIframe(data) {
+  if (isIframe) {
+    return window.top.postMessage({
+      type: 'rc-message-proxy',
+      data
+    }, '*')
+  }
+  let dom = document.querySelector('#rc-widget-adapter-frame')
+  dom && dom.contentWindow.postMessage(data, '*')
+}
+
 export function popup() {
   if (window._rc_is_no_spa) {
     return popupBg()
   }
-  document.querySelector('#rc-widget-adapter-frame').contentWindow.postMessage({
+  sendMsgToRCIframe({
     type: 'rc-adapter-syncMinimized',
     minimized: false
-  }, '*')
-  window.postMessage({
+  })
+  window.top.postMessage({
     type: 'rc-adapter-syncMinimized',
     minimized: false
   }, '*')
@@ -82,11 +102,11 @@ export function callWithRingCentral(phoneNumber, callAtOnce = true) {
     return callWithRingCentralBg(phoneNumber, callAtOnce)
   }
   popup()
-  document.querySelector('#rc-widget-adapter-frame').contentWindow.postMessage({
+  sendMsgToRCIframe({
     type: 'rc-adapter-new-call',
     phoneNumber,
     toCall: callAtOnce
-  }, '*')
+  })
 
 }
 
