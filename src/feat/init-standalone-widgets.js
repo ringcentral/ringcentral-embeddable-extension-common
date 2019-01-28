@@ -9,7 +9,8 @@ import {
   createElementFromHTML,
   createCallBtnHtml,
   addRuntimeEventListener,
-  popupBg
+  popupBg,
+  isIframe
 } from '../common/helpers'
 
 function onClickInitExt() {
@@ -48,6 +49,9 @@ function initButton() {
 }
 
 export default async (config) => {
+  if (isIframe) {
+    return
+  }
   if (config.initCallButton !== false) {
     initButton()
   }
