@@ -5,7 +5,7 @@
 import {findNumbers} from 'libphonenumber-js'
 import './click-to-dial-inject.styl'
 import {callIconSvg, smsIconSvg, rcIconSvg} from './rc-icons'
-import {findParentBySel} from './helpers'
+import {findParentBySel, checkPhoneNumber} from './helpers'
 
 const NODE_TEYPE_EXCLUDES = ['STYLE', 'OPTION', 'SCRIPT', 'INPUT', 'TEXT', 'TEXTAREA']
 
@@ -13,7 +13,7 @@ function isTelLinkNode(node) {
   return node.tagName === 'A' && (node.matches('a[href^="tel:"]') || node.matches('a[href^="sms:"]'))
 }
 
-function getAllNumberNodes(rootNode, isTelNode = isTelLinkNode) {
+function getAllNumberNodes(rootNode, isTelNode = isTelLinkNode, getPhoneNumber) {
   let numberNodes = []
   if (
     !rootNode
@@ -26,7 +26,7 @@ function getAllNumberNodes(rootNode, isTelNode = isTelLinkNode) {
   //   }
   //   return numberNodes
   // }
-  if (isTelNode(rootNode)) {
+  if (isTelNode(rootNode) && checkPhoneNumber(getPhoneNumber(rootNode))) {
     numberNodes.push(rootNode)
     return numberNodes
   }
@@ -37,10 +37,10 @@ function getAllNumberNodes(rootNode, isTelNode = isTelLinkNode) {
         numberNodes.push(node)
       }
     } else*/
-    if (isTelNode(node)) {
+    if (isTelNode(node) && checkPhoneNumber(getPhoneNumber(node))) {
       numberNodes.push(node)
     } else {
-      numberNodes = numberNodes.concat(getAllNumberNodes(node, isTelNode))
+      numberNodes = numberNodes.concat(getAllNumberNodes(node, isTelNode, getPhoneNumber))
     }
     node = node.nextSibling
   }
@@ -74,17 +74,17 @@ class ClickToDialInject {
   }
 
   _initObserver = () => {
-    const numberNodes = getAllNumberNodes(document.body, this.isTelNode)
+    const numberNodes = getAllNumberNodes(document.body, this.isTelNode, this.getPhoneNumber)
     this._handlePhoneNumberNodes(numberNodes)
     this._elemObserver = new MutationObserver(mutations => {
       let addedNumberNodes = []
       let removedNodes = []
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
-          addedNumberNodes = addedNumberNodes.concat(getAllNumberNodes(node, this.isTelNode))
+          addedNumberNodes = addedNumberNodes.concat(getAllNumberNodes(node, this.isTelNode, this.getPhoneNumber))
         })
         mutation.removedNodes.forEach((node) => {
-          removedNodes = removedNodes.concat(getAllNumberNodes(node, this.isTelNode))
+          removedNodes = removedNodes.concat(getAllNumberNodes(node, this.isTelNode, this.getPhoneNumber))
         })
       })
       this._handlePhoneNumberNodes(addedNumberNodes)
