@@ -77,18 +77,7 @@ class ClickToDialInject {
     const numberNodes = getAllNumberNodes(document.body, this.isTelNode, this.getPhoneNumber)
     this._handlePhoneNumberNodes(numberNodes)
     this._elemObserver = new MutationObserver(mutations => {
-      let addedNumberNodes = []
-      let removedNodes = []
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          addedNumberNodes = addedNumberNodes.concat(getAllNumberNodes(node, this.isTelNode, this.getPhoneNumber))
-        })
-        mutation.removedNodes.forEach((node) => {
-          removedNodes = removedNodes.concat(getAllNumberNodes(node, this.isTelNode, this.getPhoneNumber))
-        })
-      })
-      this._handlePhoneNumberNodes(addedNumberNodes)
-      this._removeC2Dhandler(removedNodes)
+      this._handlePhoneNumberNodes(getAllNumberNodes(document.body, this.isTelNode, this.getPhoneNumber))
     })
     this._elemObserver.observe(document.body, { childList: true, subtree: true, characterData: true })
   }
