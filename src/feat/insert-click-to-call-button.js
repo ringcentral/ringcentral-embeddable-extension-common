@@ -8,6 +8,7 @@ import {
   createCallBtnHtml,
   createElementFromHTML,
   callWithRingCentral,
+  smsWithRingCentral,
   onClickPhoneNumber,
   RCBTNCLS2
 } from '../common/helpers'
@@ -86,13 +87,20 @@ class insertHandler {
     let callByRingCentralBtn = createElementFromHTML(
       createCallBtnHtml(RCBTNCLS2, phoneNumbers)
     )
-    callByRingCentralBtn.addEventListener('click', (e) => {
+    let call = callByRingCentralBtn.querySelector('.rc-widget-c2d-icon')
+    let sms = callByRingCentralBtn.querySelector('.rc-widget-c2sms-icon')
+    call.addEventListener('click', (e) => {
       if (phoneNumbers.length === 1) {
         return callWithRingCentral(phoneNumbers[0].number)
       }
       onClickPhoneNumber(e)
     })
-
+    sms.addEventListener('click', (e) => {
+      if (phoneNumbers.length === 1) {
+        return smsWithRingCentral(phoneNumbers[0].number)
+      }
+      onClickPhoneNumber(e, true)
+    })
     elem[insertMethod](
       callByRingCentralBtn,
       elem.childNodes[0]

@@ -17,7 +17,8 @@ import {
   RCBTNCLS,
   onClickPhoneNumber,
   RCLOADINGCLS,
-  createPhoneList
+  createPhoneList,
+  smsWithRingCentral
 } from '../common/helpers'
 import createLoading from '../common/loading'
 
@@ -96,14 +97,17 @@ class HoverHandler {
     } else {
       tooltip.innerHTML = createCallBtnHtml()
     }
-    tooltip.onclick = this.onClick
+    let call = tooltip.querySelector('.rc-widget-c2d-icon')
+    let sms = tooltip.querySelector('.rc-widget-c2sms-icon')
+    call.onclick = () => this.onClick()
+    sms.onclick = () => this.onClick(true)
     if (!hasToolTip) {
       document.body.appendChild(tooltip)
     }
     return {tooltip, isShowing}
   }
 
-  onClick = async () => {
+  onClick = async (sms = false) => {
     let {currentRow} = this
     let {getContactPhoneNumbers} = this.config
     this.loading(true)
@@ -115,14 +119,19 @@ class HoverHandler {
     }
     else if (numbers.length === 1) {
       this.hideRCBtn()
-      callWithRingCentral(numbers[0].number)
+      if (sms) {
+        smsWithRingCentral(numbers[0].number)
+      }
+      else {
+        callWithRingCentral(numbers[0].number)
+      }
     }
     else {
-      this.showNumbers(numbers)
+      this.showNumbers(numbers, sms)
     }
   }
 
-  showNumbers = numbers => {
+  showNumbers = (numbers, sms) => {
     let phonesHtml = createPhoneList(numbers, 'rc-phone-list')
     let dom = createElementFromHTML(phonesHtml)
     let tooltip = document.querySelector(
@@ -130,7 +139,7 @@ class HoverHandler {
     )
     if (tooltip) {
       tooltip.appendChild(dom)
-      tooltip.onclick = onClickPhoneNumber
+      tooltip.onclick = (e) => onClickPhoneNumber(e, sms)
     }
   }
 

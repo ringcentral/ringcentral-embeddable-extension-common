@@ -5,7 +5,8 @@
  */
 
 import {
-  callWithRingCentral
+  callWithRingCentral,
+  smsWithRingCentral
 } from '../common/helpers'
 
 import C2D from '../common/click-to-dial-inject'
@@ -13,6 +14,7 @@ import C2D from '../common/click-to-dial-inject'
 function processLink(config) {
   let conf = {
     onCallClick: callWithRingCentral,
+    onSmsClick: smsWithRingCentral,
     selector: config.selector,
     isTelNode: (node) => {
       return node.matches ? node.matches(config.selector) : false

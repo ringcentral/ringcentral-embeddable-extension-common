@@ -97,6 +97,19 @@ export function popup() {
   }, '*')
 }
 
+
+export function smsWithRingCentral(phoneNumber, text = '') {
+  if (window._rc_is_no_spa) {
+    return smsWithRingCentralBg(phoneNumber, text)
+  }
+  popup()
+  sendMsgToRCIframe({
+    type: 'rc-adapter-new-sms',
+    phoneNumber,
+    text
+  })
+}
+
 export function callWithRingCentral(phoneNumber, callAtOnce = true) {
   if (window._rc_is_no_spa) {
     return callWithRingCentralBg(phoneNumber, callAtOnce)
@@ -107,7 +120,6 @@ export function callWithRingCentral(phoneNumber, callAtOnce = true) {
     phoneNumber,
     toCall: callAtOnce
   })
-
 }
 
 let events = []
@@ -182,8 +194,7 @@ export function createPhoneList(phoneNumbers, cls = 'rc-call-dds') {
 
 export const createCallBtnHtml = (
   cls = '',
-  phoneNumbers = [],
-  options = {}
+  phoneNumbers = []
 ) => {
   let cls2 = phoneNumbers && phoneNumbers.length > 1
     ? 'rc-has-dd'
@@ -196,29 +207,28 @@ export const createCallBtnHtml = (
       <div class="rc-widget-action-icon rc-widget-c2d-icon" title="Call with RingCentral">
         ${callIconSvg()}
       </div>
-      ${
-        options.sms
-        ? `<div class="rc-widget-c2d-separator-line"></div>
-          <div class="rc-widget-action-icon rc-widget-c2sms-icon" title="SMS with RingCentral">
-          ${smsIconSvg()}
-        </div>`
-        : ''
-      }
+      <div class="rc-widget-c2d-separator-line"></div>
+      <div class="rc-widget-action-icon rc-widget-c2sms-icon" title="SMS with RingCentral">
+        ${smsIconSvg()}
+      </div>
       ${createPhoneList(phoneNumbers)}
     </span>
   `
 }
 
-export function onClickPhoneNumber(e) {
+export function onClickPhoneNumber(e, sms = false) {
   let {target} = e
   let p = findParentBySel(target, '.rc-call-dd')
   if (!p) {
     return
   }
   let n = p.querySelector('b').textContent.trim()
-  callWithRingCentral(n)
+  if (sms) {
+    smsWithRingCentral(n)
+  } else {
+    callWithRingCentral(n)
+  }
 }
-
 
 /**
  * register event handler which will auto destroy after fisrt run
@@ -264,3 +274,16 @@ export function callWithRingCentralBg(phoneNumber, callAtOnce = true) {
     }
   })
 }
+
+export function smsWithRingCentralBg(phoneNumber, text) {
+  popup()
+  sendMsgToBackground({
+    to: 'standalone',
+    data: {
+      type: 'rc-adapter-new-call',
+      phoneNumber,
+      text
+    }
+  })
+}
+
