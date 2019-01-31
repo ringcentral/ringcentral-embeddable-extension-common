@@ -174,9 +174,11 @@ export default function initBackground(checkTabFunc) {
   chrome.tabs.onRemoved.addListener(tab => {
     onTabEvent(tab, 'remove')
   })
-  
-  chrome.pageAction.onClicked.addListener(function (tab) {
-    chrome.pageAction.show(tab.id)
+  const pageAction = chrome.pageAction || chrome.browserAction
+  pageAction.onClicked.addListener(function (tab) {
+    if (pageAction.show) {
+      pageAction.show(tab.id)
+    }
     if (
       checkTab(tab)
     ) {
