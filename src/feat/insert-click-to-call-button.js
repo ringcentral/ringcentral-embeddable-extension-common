@@ -85,21 +85,34 @@ class insertHandler {
       return
     }
     let callByRingCentralBtn = createElementFromHTML(
-      createCallBtnHtml(RCBTNCLS2, phoneNumbers)
+      createCallBtnHtml(RCBTNCLS2 + ' rc-hide-dd', phoneNumbers)
     )
     let call = callByRingCentralBtn.querySelector('.rc-widget-c2d-icon')
     let sms = callByRingCentralBtn.querySelector('.rc-widget-c2sms-icon')
+    let dd = callByRingCentralBtn.querySelector('.rc-call-dds')
     call.addEventListener('click', (e) => {
       if (phoneNumbers.length === 1) {
         return callWithRingCentral(phoneNumbers[0].number)
       }
-      onClickPhoneNumber(e)
+      else {
+        this.type = 'call'
+        callByRingCentralBtn.classList.remove('rc-hide-dd')
+      }
+    })
+    callByRingCentralBtn.addEventListener('mouseleave', e => {
+      callByRingCentralBtn.classList.add('rc-hide-dd')
     })
     sms.addEventListener('click', (e) => {
       if (phoneNumbers.length === 1) {
         return smsWithRingCentral(phoneNumbers[0].number)
       }
-      onClickPhoneNumber(e, true)
+      else {
+        this.type = 'sms'
+        callByRingCentralBtn.classList.remove('rc-hide-dd')
+      }
+    })
+    dd.addEventListener('click', (e) => {
+      onClickPhoneNumber(e, this.type === 'sms')
     })
     elem[insertMethod](
       callByRingCentralBtn,

@@ -250,15 +250,18 @@ box-shadow()
 
 .rc-has-dd
   position relative
-  height 35px
-  width 98px
+  height 30px
+  width 99px
   z-index 888
   &:hover
-    width 98px
     .rc-call-dds
       display block
       z-index 8888
-
+  &.rc-hide-dd
+    &:hover
+      .rc-call-dds
+        display none
+        
 .rc-phone-list
   background #fff
   padding 10px
