@@ -280,7 +280,7 @@ export function smsWithRingCentralBg(phoneNumber, text) {
   sendMsgToBackground({
     to: 'standalone',
     data: {
-      type: 'rc-adapter-new-call',
+      type: 'rc-adapter-new-sms',
       phoneNumber,
       text
     }
