@@ -25,7 +25,9 @@ async function cb(tabId) {
   if (
     checkTab(tab)
   ) {
-    chrome.pageAction.show(tab.id)
+    if (chrome.pageAction) {
+      chrome.pageAction.show(tab.id)
+    }
     return
   }
 }
@@ -33,8 +35,11 @@ async function cb(tabId) {
 chrome.tabs.onCreated.addListener(cb)
 chrome.tabs.onUpdated.addListener(cb)
 
-chrome.pageAction.onClicked.addListener(function (tab) {
-  chrome.pageAction.show(tab.id)
+const pageAction = chrome.pageAction || chrome.browserAction
+pageAction.onClicked.addListener(function (tab) {
+  if (pageAction.show) {
+    pageAction.show(tab.id)
+  }
   if (
     checkTab(tab)
   ) {
