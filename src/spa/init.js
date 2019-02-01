@@ -23,14 +23,16 @@ function registerService(config) {
   convertPhoneLink(config)
 
   // Listen message from background.js to open app window when user click icon.
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.action === 'openAppWindow') {
-        popup()
+  if (!isIframe) {
+    chrome.runtime.onMessage.addListener(
+      function(request, sender, sendResponse) {
+        if (request.action === 'openAppWindow') {
+          popup()
+        }
+        sendResponse('ok')
       }
-      sendResponse('ok')
-    }
-  )
+    )
+  }
 }
 
 let registered = false
