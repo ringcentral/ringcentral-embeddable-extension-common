@@ -111,7 +111,7 @@ class insertHandler {
         callByRingCentralBtn.classList.remove('rc-hide-dd')
       }
     })
-    dd.addEventListener('click', (e) => {
+    dd && dd.addEventListener('click', (e) => {
       onClickPhoneNumber(e, this.type === 'sms')
     })
     elem[insertMethod](
