@@ -1,6 +1,6 @@
 # ringcentral-embeddable-extension-common
 
-RingCentral Embeddable Voice chrome extension common files.
+RingCentral Embeddable Voice Chrome/Firefox extension common files.
 
 ## Use
 
@@ -20,6 +20,7 @@ In `content.js` for single page app
 
 import createApp from 'ringcentral-embeddable-extension-common/src/spa/init'
 //import * as config from './config'
+import {isIframe} from 'ringcentral-embeddable-extension-common/src/common/helpers'
 import {ringCentralConfigs} from 'ringcentral-embeddable-extension-common/src/common/app-config'
 import 'ringcentral-embeddable-extension-common/src/spa/style.styl'
 import './custom.styl'
@@ -35,13 +36,15 @@ if (clientID || appServer) {
 }
 
 /* eslint-disable-next-line */
-;(function() {
-  console.log('import RingCentral Embeddable Voice to web page')
-  var rcs = document.createElement('script')
-  rcs.src = 'https://ringcentral.github.io/ringcentral-embeddable/adapter.js' + appConfigQuery
-  var rcs0 = document.getElementsByTagName('script')[0]
-  rcs0.parentNode.insertBefore(rcs, rcs0)
-})()
+if (!isIframe) {
+  ;(function() {
+    console.log('import RingCentral Embeddable Voice to web page')
+    var rcs = document.createElement('script')
+    rcs.src = 'https://ringcentral.github.io/ringcentral-embeddable/adapter.js' + appConfigQuery
+    var rcs0 = document.getElementsByTagName('script')[0]
+    rcs0.parentNode.insertBefore(rcs, rcs0)
+  })()
+}
 
 let config = {
   // config for insert click to call button, check ./config.js insertClickToCallButton  for detail
