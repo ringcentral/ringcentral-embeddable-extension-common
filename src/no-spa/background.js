@@ -41,20 +41,23 @@ function popup() {
 async function initStandaloneWindow() {
   // open standalong app window when click icon
   if (!standaloneWindow) {
-    let arr = await getDisplayInfo()
-    let {
-      width,
-      height
-    } = _.get(arr, '[0].workArea') || {}
-    chrome.windows.create({
+    const windowParam = {
       url: './standalone.html',
       type: 'popup',
-      focused: true,
       width: 300,
       height: 536,
-      left: parseInt(width, 10) - 300,
-      top: parseInt(height, 10) - 536
-    }, function (wind) {
+    }
+    if (chrome.system && chrome.system.display) {
+      let arr = await getDisplayInfo()
+      let {
+        width,
+        height
+      } = _.get(arr, '[0].workArea') || {}
+      windowParam.left = parseInt(width, 10) - 300
+      windowParam.top = parseInt(height, 10) - 536
+      windowParam.focused = true
+    }
+    chrome.windows.create(windowParam, function (wind) {
       standaloneWindow = wind
       sendMsgToContent({
         action: 'widgets-window-state-notify',
@@ -171,9 +174,11 @@ export default function initBackground(checkTabFunc) {
   chrome.tabs.onRemoved.addListener(tab => {
     onTabEvent(tab, 'remove')
   })
-  
-  chrome.pageAction.onClicked.addListener(function (tab) {
-    chrome.pageAction.show(tab.id)
+  const pageAction = chrome.pageAction || chrome.browserAction
+  pageAction.onClicked.addListener(function (tab) {
+    if (pageAction.show) {
+      pageAction.show(tab.id)
+    }
     if (
       checkTab(tab)
     ) {
