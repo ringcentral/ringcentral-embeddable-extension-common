@@ -84,8 +84,11 @@ export default function initBackground(checkTabFunc) {
   checkTab = checkTabFunc
   chrome.tabs.onCreated.addListener(cb)
   chrome.tabs.onUpdated.addListener(cb)
-  chrome.pageAction.onClicked.addListener(function (tab) {
-    chrome.pageAction.show(tab.id)
+  const pageAction = chrome.pageAction || chrome.browserAction
+  pageAction.onClicked.addListener(function (tab) {
+    if (pageAction.show) {
+      pageAction.show(tab.id)
+    }
     if (
       checkTab(tab)
     ) {
