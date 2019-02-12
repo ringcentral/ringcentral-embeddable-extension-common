@@ -48,7 +48,7 @@ export default (config) => {
     })
     if (isIframe) {
       registered = true
-      registerService(config)
+      return registerService(config)
     }
     window.addEventListener('message', function (e) {
       const data = e.data
