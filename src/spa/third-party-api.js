@@ -17,11 +17,6 @@ let {
   serviceName
 } = thirdPartyConfigs
 
-window.rc = {
-  postMessage: sendMsgToRCIframe,
-  rcLogined: false
-}
-
 export default async function initThirdPartyApi (config) {
   if (!config.thirdPartyServiceConfig) {
     return
@@ -35,7 +30,7 @@ export default async function initThirdPartyApi (config) {
     handleRCEvents
   } = thirdPartyConfig
 
-  window.rc.postMessage({
+  sendMsgToRCIframe({
     type: 'rc-adapter-register-third-party-service',
     service: services
   })

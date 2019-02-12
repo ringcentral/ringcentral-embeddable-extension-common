@@ -18,15 +18,6 @@ let {
   serviceName
 } = thirdPartyConfigs
 
-window.rc = {
-  postMessage: data => {
-    sendMsgToBackground({
-      to: 'standalone',
-      data
-    })
-  }
-}
-
 export default async function initThirdPartyApi (config) {
   if (!config.thirdPartyServiceConfig) {
     return
@@ -49,7 +40,13 @@ export default async function initThirdPartyApi (config) {
     }
     let {type} = data
     if (type === 'rc-adapter-syncPresence') {
-      window.rc.postMessage({
+      const postMessage = data => {
+        sendMsgToBackground({
+          to: 'standalone',
+          data
+        })
+      }
+      postMessage({
         type: 'rc-adapter-register-third-party-service',
         service: services
       })

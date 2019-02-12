@@ -1,6 +1,6 @@
 {
   "name": "ringcentral-embeddable-extension-common",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Cli tool to create a RingCentral Embeddable Voice chrome extension for sites.",
   "repository": {
     "type": "git",
