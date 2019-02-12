@@ -11,7 +11,9 @@ import {
 function registerService(config) {
 
   // handle contacts sync feature
-  initThirdPartyApi(config)
+  if (!isIframe) {
+    initThirdPartyApi(config)
+  }
 
   // insert click-to-call button
   insertClickToCall(config)
