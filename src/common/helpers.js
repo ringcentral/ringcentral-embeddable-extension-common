@@ -1,7 +1,5 @@
-import {parseNumber} from 'libphonenumber-js'
+import {parsePhoneNumberFromString} from 'libphonenumber-js'
 import _ from 'lodash'
-import RCLOGOSVG from './rc-logo'
-import {formatNumber} from 'libphonenumber-js'
 import {callIconSvg, smsIconSvg, rcIconSvg} from './rc-icons'
 
 export const RCBTNCLS = 'call-with-ringccentral-btn'
@@ -15,7 +13,7 @@ export const lsKeys = {
 export const host = getHost()
 export const isIframe = inIframe ()
 
-const phoneFormat = 'National'
+const phoneFormat = 'US'
 
 function inIframe () {
   try {
@@ -30,8 +28,9 @@ function getHost() {
   return `${protocol}//${host}`
 }
 
-export function formatPhone(phone) {
-  return formatNumber(phone, phoneFormat) || phone
+export function formatPhone(phone, country = phoneFormat) {
+  let res = parsePhoneNumberFromString(phone, country)
+  return res ? res.formatInternational() : phone
 }
 
 let msgHandler1
@@ -60,10 +59,7 @@ export function notify(msg, type = 'info', timer = 5000) {
 }
 
 export function checkPhoneNumber(phone, country = 'US') {
-  return !_.isEqual(
-    {},
-    parseNumber(phone, country)
-  )
+  return parsePhoneNumberFromString(phone, country)
 }
 
 export function createElementFromHTML(htmlString) {
