@@ -1,6 +1,7 @@
 import {parsePhoneNumberFromString} from 'libphonenumber-js'
 import _ from 'lodash'
 import {callIconSvg, smsIconSvg, rcIconSvg} from './rc-icons'
+import {thirdPartyConfigs} from './app-config'
 
 export const RCBTNCLS = 'call-with-ringccentral-btn'
 export const RCBTNCLS2 = 'call-with-rc-btn'
@@ -75,7 +76,7 @@ export function sendMsgToRCIframe(data) {
       data
     }, '*')
   }
-  let dom = document.querySelector('#rc-widget-adapter-frame')
+  let dom = document.querySelector(`#${thirdPartyConfigs.serviceName}-rc-adapter-frame`)
   dom && dom.contentWindow.postMessage(data, '*')
 }
 
