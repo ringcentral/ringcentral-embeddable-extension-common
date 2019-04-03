@@ -22,7 +22,6 @@ import createApp from 'ringcentral-embeddable-extension-common/src/spa/init'
 //import * as config from './config'
 import {ringCentralConfigs, thirdPartyConfigs, appVersion} from 'ringcentral-embeddable-extension-common/src/common/app-config'
 import {isIframe} from 'ringcentral-embeddable-extension-common/src/common/helpers'
-import {ringCentralConfigs} from 'ringcentral-embeddable-extension-common/src/common/app-config'
 import 'ringcentral-embeddable-extension-common/src/spa/style.styl'
 import './custom.styl'
 
