@@ -15,11 +15,12 @@ export function setCache(
       ? 'Infinity'
       : (+ new Date()) + expire
   })
+    .catch(console.log)
 }
 
 export async function getCache(key) {
   let now = + new Date()
-  let v = await ls.get(key)
+  let v = await ls.get(key).catch(console.log)
   return v && v.expire > now
     ? v.value
     : null
