@@ -41,9 +41,13 @@ let checkTab = (tab) => {
 async function cb(tabId) {
   let tab = tabId.id
     ? tabId
-    : await new Promise((resolve) => {
-      chrome.tabs.get(tabId, resolve)
-    })
+    : await new Promise((resolve, reject) => {
+      try {
+        chrome.tabs.get(tabId, resolve)
+      } catch(e) {
+        reject(e)
+      }
+    }).catch(() => {})
   if (
     checkTab(tab)
   ) {

@@ -102,8 +102,12 @@ async function sendMsgToContent(data) {
 }
 
 function getTabFromId(id) {
-  return new Promise((resolve) => {
-    chrome.tabs.get(id, resolve)
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.tabs.get(id, resolve)
+    } catch(e) {
+      reject(e)
+    }
   })
 }
 
