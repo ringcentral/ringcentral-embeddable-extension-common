@@ -1,12 +1,1 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg">
-<metadata>Copyright (C) 2019 by original authors @ fontello.com</metadata>
-<defs>
-<font id="fontello" horiz-adv-x="1000" >
-<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
-<missing-glyph horiz-adv-x="1000" />
-<glyph glyph-name="cw-circled" unicode="&#xe800;" d="M0 350q0 207 147 354t353 146 354-146 146-354-146-354-354-146-353 146-147 354z m211 0q0-119 85-204t204-85q80 0 146 39t104 106l-102 58q-21-39-61-62t-87-24q-70 0-121 51t-51 121 51 121 121 51q61 0 107-37l-76-55 258-86 0 270-84-61q-84 86-205 86-119 0-204-85t-85-204z" horiz-adv-x="1000" />
-</font>
-</defs>
-</svg>
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1559003744561" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="958" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style type="text/css"></style></defs><path d="M768 576c0 141.248-114.752 256-256 256s-256-114.752-256-256 114.752-256 256-256l128 0 0.736 128.64L833.12 256l-192.384-192 0 128L512 192C300 192 128 364 128 576s172 384 384 384 384-172 384-384L768 576z" p-id="959"></path></svg>
