@@ -12,7 +12,7 @@ export const get = (keys) => {
         : keys
       chrome.storage.local.get(
         arg,
-        function(res) {
+        function (res) {
           resolve(
             _.isString(keys)
               ? res[keys]
@@ -20,7 +20,7 @@ export const get = (keys) => {
           )
         }
       )
-    } catch(e) {
+    } catch (e) {
       reject(e)
     }
   })
@@ -38,7 +38,7 @@ export const set = (key, value) => {
         arg,
         resolve
       )
-    } catch(e) {
+    } catch (e) {
       reject(e)
     }
   })
@@ -51,7 +51,7 @@ export const remove = (key) => {
         key,
         resolve
       )
-    } catch(e) {
+    } catch (e) {
       reject(e)
     }
   })
@@ -63,7 +63,7 @@ export const clear = () => {
       chrome.storage.local.clear(
         resolve
       )
-    } catch(e) {
+    } catch (e) {
       reject(e)
     }
   })

@@ -2,18 +2,16 @@
  * by Embbnux Ji embbnux@embbnux.com
  */
 
-import {findNumbers} from 'libphonenumber-js'
+import { findNumbers } from 'libphonenumber-js'
 import './click-to-dial-inject.styl'
-import {callIconSvg, smsIconSvg, rcIconSvg} from './rc-icons'
-import {findParentBySel, checkPhoneNumber} from './helpers'
+import { callIconSvg, smsIconSvg, rcIconSvg } from './rc-icons'
+import { findParentBySel, checkPhoneNumber } from './helpers'
 
-const NODE_TEYPE_EXCLUDES = ['STYLE', 'OPTION', 'SCRIPT', 'INPUT', 'TEXT', 'TEXTAREA']
-
-function isTelLinkNode(node) {
+function isTelLinkNode (node) {
   return node.tagName === 'A' && (node.matches('a[href^="tel:"]') || node.matches('a[href^="sms:"]'))
 }
 
-function getAllNumberNodes(rootNode, isTelNode = isTelLinkNode, getPhoneNumber) {
+function getAllNumberNodes (rootNode, isTelNode = isTelLinkNode, getPhoneNumber) {
   let numberNodes = []
   if (
     !rootNode
@@ -31,12 +29,12 @@ function getAllNumberNodes(rootNode, isTelNode = isTelLinkNode, getPhoneNumber) 
     return numberNodes
   }
   let node = rootNode.firstChild
-  while (!!node) {
-    /*if (node.nodeType === Node.TEXT_NODE) {
+  while (node) {
+    /* if (node.nodeType === Node.TEXT_NODE) {
       if (node.data && node.data.replace(/[^\d]/g, '').length > 1) {
         numberNodes.push(node)
       }
-    } else*/
+    } else */
     if (isTelNode(node) && checkPhoneNumber(getPhoneNumber(node))) {
       numberNodes.push(node)
     } else {
@@ -53,7 +51,7 @@ const RC_C2D_ELEM_ATTRIBUTE = 'DATA_PHONE_NUMBER'
 const RC_C2D_MENU_HEIGHT = 30
 
 class ClickToDialInject {
-  constructor({
+  constructor ({
     onSmsClick,
     onCallClick,
     isTelNode = isTelLinkNode,
@@ -83,7 +81,6 @@ class ClickToDialInject {
   }
 
   _handlePhoneNumberNodes = (nodes) => {
-
     nodes.forEach((node) => {
       const parentNode = node.parentNode
       if (parentNode && parentNode.tagName === RC_C2D_TAGNAME) {

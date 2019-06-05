@@ -11,7 +11,7 @@ function sendMsg (data) {
     .postMessage(data, '*')
 }
 
-function onMsg(e) {
+function onMsg (e) {
   chrome.runtime.sendMessage({
     data: e.data,
     to: 'content'
@@ -27,10 +27,10 @@ function onMsg(e) {
   })
 }
 
-function init() {
+function init () {
   window.addEventListener('message', onMsg)
   chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+    function (request, sender, sendResponse) {
       if (request.to === 'standalone') {
         sendMsg(request.data)
         sendResponse()

@@ -1,10 +1,10 @@
 /**
  * loading icon
  */
-import {createElementFromHTML} from './helpers'
+import { createElementFromHTML } from './helpers'
 import loadingImg from './loading.svg'
 
-export default (text = '', cls='') => {
+export default (text = '', cls = '') => {
   let textNode = text
     ? `<span class="rc-iblock rc-mg1l">${text}</span>`
     : ''

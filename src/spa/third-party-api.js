@@ -10,8 +10,8 @@
  *
  */
 
-import {thirdPartyConfigs} from '../common/app-config'
-import {sendMsgToRCIframe} from '../common/helpers'
+import { thirdPartyConfigs } from '../common/app-config'
+import { sendMsgToRCIframe } from '../common/helpers'
 
 let {
   serviceName
@@ -39,6 +39,4 @@ export default async function initThirdPartyApi (config) {
   window.addEventListener('message', handleRCEvents)
 
   config.initThirdParty && config.initThirdParty()
-
 }
-

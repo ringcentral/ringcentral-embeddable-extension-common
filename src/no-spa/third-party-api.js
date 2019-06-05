@@ -8,8 +8,7 @@
  * document about third party features: https://github.com/ringcentral/ringcentral-embeddable/blob/master/docs/third-party-service-in-widget.md
  */
 
-import {thirdPartyConfigs} from '../common/app-config'
-import _ from 'lodash'
+import { thirdPartyConfigs } from '../common/app-config'
 import {
   sendMsgToBackground
 } from '../common/helpers'
@@ -34,12 +33,12 @@ export default async function initThirdPartyApi (config) {
   let inited = false
 
   window.addEventListener('message', (e) => {
-    let {data} = e
+    let { data } = e
     if (!data) {
       return
     }
-    let {type} = data
-    if (type === 'rc-adapter-syncPresence') {
+    let { type } = data
+    if (type === 'rc-standalone-init') {
       const postMessage = data => {
         sendMsgToBackground({
           to: 'standalone',
@@ -57,6 +56,4 @@ export default async function initThirdPartyApi (config) {
       }
     }
   })
-
 }
-

@@ -1,5 +1,4 @@
 
-
 import initThirdPartyApi from './third-party-api'
 import insertClickToCall from '../feat/insert-click-to-call-button'
 import addHoverEvent from '../feat/hover-to-show-call-button'
@@ -8,8 +7,7 @@ import {
   popup, isIframe, sendMsgToRCIframe
 } from '../common/helpers'
 
-function registerService(config) {
-
+function registerService (config) {
   // handle contacts sync feature
   if (!isIframe) {
     initThirdPartyApi(config)
@@ -27,7 +25,7 @@ function registerService(config) {
   // Listen message from background.js to open app window when user click icon.
   if (!isIframe) {
     chrome.runtime.onMessage.addListener(
-      function(request, sender, sendResponse) {
+      function (request, sender, sendResponse) {
         if (request.action === 'openAppWindow') {
           popup()
         }

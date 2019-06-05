@@ -4,7 +4,7 @@
 
 import * as ls from './ls'
 
-export function setCache(
+export function setCache (
   key,
   value,
   expire = 10000
@@ -13,13 +13,13 @@ export function setCache(
     value,
     expire: expire === 'never'
       ? 'Infinity'
-      : (+ new Date()) + expire
+      : (+new Date()) + expire
   })
     .catch(console.log)
 }
 
-export async function getCache(key) {
-  let now = + new Date()
+export async function getCache (key) {
+  let now = +new Date()
   let v = await ls.get(key).catch(console.log)
   return v && v.expire > now
     ? v.value

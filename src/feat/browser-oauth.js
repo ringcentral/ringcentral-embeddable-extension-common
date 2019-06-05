@@ -2,16 +2,18 @@
  * use extension oauth api
  */
 
- /**
+import _ from 'lodash'
+
+/**
   * get auth code through oauth2.0 flow
   * @param url {string} auth url
   * @param interactive {bool}
   */
-export default function getAuthCode(url, interactive = true) {
+export default function getAuthCode (url, interactive = true) {
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({
       data: {
-        url: authUrl,
+        url,
         interactive: true
       },
       action: 'oauth'

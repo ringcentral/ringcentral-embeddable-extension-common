@@ -19,13 +19,13 @@ let checkTab = (tab) => {
   // tab.url.includes('redtailtechnology.com')
 }
 
-function getDisplayInfo() {
+function getDisplayInfo () {
   return new Promise(resolve => {
     chrome.system.display.getInfo(resolve)
   })
 }
 
-function popup() {
+function popup () {
   if (!standaloneWindow) {
     return initStandaloneWindow()
   }
@@ -38,14 +38,14 @@ function popup() {
   )
 }
 
-async function initStandaloneWindow() {
+async function initStandaloneWindow () {
   // open standalong app window when click icon
   if (!standaloneWindow) {
     const windowParam = {
       url: './standalone.html',
       type: 'popup',
       width: 300,
-      height: 536,
+      height: 536
     }
     if (chrome.system && chrome.system.display) {
       let arr = await getDisplayInfo()
@@ -72,19 +72,19 @@ async function initStandaloneWindow() {
   }
 }
 
-function getStandaloneWindowTab() {
+function getStandaloneWindowTab () {
   return _.get(standaloneWindow, 'tabs[0]')
 }
 
-function sendMsgToTab(tab, data) {
+function sendMsgToTab (tab, data) {
   return new Promise((resolve) => {
-    chrome.tabs.sendMessage(tab.id, data, function(response) {
+    chrome.tabs.sendMessage(tab.id, data, function (response) {
       resolve(response)
     })
   })
 }
 
-async function sendMsgToStandAlone(data) {
+async function sendMsgToStandAlone (data) {
   let tab = getStandaloneWindowTab()
   if (!tab) {
     return
@@ -92,30 +92,30 @@ async function sendMsgToStandAlone(data) {
   return sendMsgToTab(tab, data)
 }
 
-async function sendMsgToContent(data) {
+async function sendMsgToContent (data) {
   let res = {}
   for (let id of activeTabIds) {
-    let response = await sendMsgToTab({id}, data)
+    let response = await sendMsgToTab({ id }, data)
     res[id] = response
   }
   return res
 }
 
-function getTabFromId(id) {
+function getTabFromId (id) {
   return new Promise((resolve, reject) => {
     try {
       chrome.tabs.get(id, resolve)
-    } catch(e) {
+    } catch (e) {
       reject(e)
     }
   })
 }
 
-async function onTabEvent(_tab, action) {
+async function onTabEvent (_tab, action) {
   let tab = _.isPlainObject(_tab)
     ? _tab
     : await getTabFromId(_tab).catch(() => {})
-  let {id} = tab
+  let { id } = tab
   if (
     checkTab(tab)
   ) {
@@ -129,7 +129,6 @@ async function onTabEvent(_tab, action) {
     } else if (action === 'update') {
       activeTabIds.add(id)
     }
-    return
   } else if (
     action === 'update'
   ) {
@@ -137,8 +136,7 @@ async function onTabEvent(_tab, action) {
   }
 }
 
-
-function parseQuery(queryString) {
+function parseQuery (queryString) {
   let query = {}
   let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&')
   for (var i = 0; i < pairs.length; i++) {
@@ -148,7 +146,7 @@ function parseQuery(queryString) {
   return query
 }
 
-function oauth(data) {
+function oauth (data) {
   return new Promise((resolve, reject) => {
     chrome.identity.launchWebAuthFlow(data, (url) => {
       let q = url.split('?')[1]
@@ -156,18 +154,18 @@ function oauth(data) {
       let {
         code,
         error,
-        error_description
+        error_description: ed
       } = q
       if (code) {
         resolve(code)
       } else if (error) {
-        reject(`${error}:${error_description}`)
+        reject(new Error(`${error}:${ed}`))
       }
     })
   })
 }
 
-export default function initBackground(checkTabFunc) {
+export default function initBackground (checkTabFunc) {
   checkTab = checkTabFunc
   chrome.tabs.onCreated.addListener(tab => {
     onTabEvent(tab, 'add')
@@ -187,13 +185,12 @@ export default function initBackground(checkTabFunc) {
       checkTab(tab)
     ) {
       // send message to content.js to to open app window.
-      chrome.tabs.sendMessage(tab.id, { action: 'openAppWindow' }, function() {})
+      chrome.tabs.sendMessage(tab.id, { action: 'openAppWindow' }, function () {})
       initStandaloneWindow()
-      return
     }
   })
 
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     let {
       to,
       data,
@@ -213,8 +210,7 @@ export default function initBackground(checkTabFunc) {
           return e
         })
       return true
-    }
-    else if (to === 'standalone') {
+    } else if (to === 'standalone') {
       sendMsgToStandAlone(data)
         .then(res => sendResponse(res))
       return true

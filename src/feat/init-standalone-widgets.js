@@ -13,11 +13,11 @@ import {
   isIframe
 } from '../common/helpers'
 
-function onClickInitExt() {
+function onClickInitExt () {
   popupBg()
 }
 
-function toggleInitButton(
+function toggleInitButton (
   btn = document.getElementById('rc-init-ext-wrap'),
   widgetsFocused
 ) {
@@ -31,7 +31,7 @@ function toggleInitButton(
   }
 }
 
-function initButton() {
+function initButton () {
   let widgetsFocused = false
   let dom = createElementFromHTML(
     `<div class="rc-init-ext-wrap animate" id="rc-init-ext-wrap">
@@ -56,7 +56,7 @@ export default async (config) => {
     initButton()
   }
   addRuntimeEventListener(
-    function(request, sender, sendResponse) {
+    function (request, sender, sendResponse) {
       if (request.action === 'widgets-window-state-notify') {
         toggleInitButton(undefined, request.widgetsFocused)
       } else {

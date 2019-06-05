@@ -1,17 +1,16 @@
 
-
 let glob = {
   urlWhiteList: []
 }
 
-function parseResponse(response) {
+function parseResponse (response) {
   let contentType = response.headers.get('content-type') || ''
   let isJsonResult = contentType.toLowerCase().indexOf('application/json') !== -1
   return isJsonResult ? response.json() : response.text()
 }
 
 function checkUrl (url) {
-  for (let i = 0, len = glob.urlWhiteList.length;i < len;i ++) {
+  for (let i = 0, len = glob.urlWhiteList.length; i < len; i++) {
     if (glob.urlWhiteList[i].test(url)) {
       return true
     } else if (i === len - 1) {
@@ -21,7 +20,7 @@ function checkUrl (url) {
 }
 
 /**
- * 
+ *
  * @param {object} tab
  */
 let checkTab = (tab) => {
@@ -38,13 +37,13 @@ let checkTab = (tab) => {
       */
 }
 
-async function cb(tabId) {
+async function cb (tabId) {
   let tab = tabId.id
     ? tabId
     : await new Promise((resolve, reject) => {
       try {
         chrome.tabs.get(tabId, resolve)
-      } catch(e) {
+      } catch (e) {
         reject(e)
       }
     }).catch(() => {})
@@ -54,7 +53,6 @@ async function cb(tabId) {
     if (chrome.pageAction) {
       chrome.pageAction.show(tab.id)
     }
-    return
   }
 }
 
@@ -70,14 +68,13 @@ pageAction.onClicked.addListener(function (tab) {
     checkTab(tab)
   ) {
     // send message to content.js to to open app window.
-    chrome.tabs.sendMessage(tab.id, { action: 'openAppWindow' }, function(response) {
+    chrome.tabs.sendMessage(tab.id, { action: 'openAppWindow' }, function (response) {
       console.log(response)
     })
-    return
   }
 })
 
-function parseQuery(queryString) {
+function parseQuery (queryString) {
   let query = {}
   let pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&')
   for (var i = 0; i < pairs.length; i++) {
@@ -87,7 +84,7 @@ function parseQuery(queryString) {
   return query
 }
 
-function oauth(data) {
+function oauth (data) {
   return new Promise((resolve, reject) => {
     chrome.identity.launchWebAuthFlow(data, (url) => {
       let q = url.split('?')[1]
@@ -95,18 +92,18 @@ function oauth(data) {
       let {
         code,
         error,
-        error_description
+        error_description: ed
       } = q
       if (code) {
         resolve(code)
       } else if (error) {
-        reject(`${error}:${error_description}`)
+        reject(new Error(`${error}:${ed}`))
       }
     })
   })
 }
 
-export default function initBackground(checkTabFunc, urlWhiteList) {
+export default function initBackground (checkTabFunc, urlWhiteList) {
   if (urlWhiteList) {
     glob.urlWhiteList = urlWhiteList
   }
@@ -122,14 +119,13 @@ export default function initBackground(checkTabFunc, urlWhiteList) {
       checkTab(tab)
     ) {
       // send message to content.js to to open app window.
-      chrome.tabs.sendMessage(tab.id, { action: 'openAppWindow' }, function(response) {
+      chrome.tabs.sendMessage(tab.id, { action: 'openAppWindow' }, function (response) {
         console.log(response)
       })
-      return
     }
   })
 
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     let {
       data,
       action
@@ -152,7 +148,7 @@ export default function initBackground(checkTabFunc, urlWhiteList) {
       if (!checkUrl(data.url)) {
         return true
       }
-      fetch(data.url, data.options)
+      window.fetch(data.url, data.options)
         .then(parseResponse)
         .then(sendResponse)
         .catch(e => sendResponse({

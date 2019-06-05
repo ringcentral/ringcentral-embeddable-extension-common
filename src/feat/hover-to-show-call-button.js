@@ -23,7 +23,7 @@ import {
 import createLoading from '../common/loading'
 
 class HoverHandler {
-  constructor(config) {
+  constructor (config) {
     this.config = config
     let {
       shouldAct
@@ -38,7 +38,7 @@ class HoverHandler {
   currentRow = null
 
   addHover = () => {
-    let {href} = location
+    let { href } = window.location
     if (!this.config.shouldAct(href)) {
       return
     }
@@ -46,7 +46,7 @@ class HoverHandler {
   }
 
   handleAddRCBtn = _.debounce((e) => {
-    let {target} = e
+    let { target } = e
     let {
       selector
     } = this.config
@@ -59,7 +59,7 @@ class HoverHandler {
       return
     }
     this.currentRow = dom
-    let {tooltip} = this.getRCTooltip()
+    let { tooltip } = this.getRCTooltip()
     tooltip.setAttribute('style', this.buildStyle(e, dom))
   }, 200)
 
@@ -68,7 +68,7 @@ class HoverHandler {
    * @param {*} e
    */
   buildStyle = (e, dom) => {
-    let {clientX} = e
+    let { clientX } = e
     let {
       top
     } = dom.getBoundingClientRect()
@@ -104,29 +104,26 @@ class HoverHandler {
     if (!hasToolTip) {
       document.body.appendChild(tooltip)
     }
-    return {tooltip, isShowing}
+    return { tooltip, isShowing }
   }
 
   onClick = async (sms = false) => {
-    let {currentRow} = this
-    let {getContactPhoneNumbers} = this.config
+    let { currentRow } = this
+    let { getContactPhoneNumbers } = this.config
     this.loading(true)
     let numbers = await getContactPhoneNumbers(currentRow)
     this.loading(false)
     if (!numbers.length) {
       notify('No phone number for this contact', 'warn')
       return this.hideRCBtn()
-    }
-    else if (numbers.length === 1) {
+    } else if (numbers.length === 1) {
       this.hideRCBtn()
       if (sms) {
         smsWithRingCentral(numbers[0].number)
-      }
-      else {
+      } else {
         callWithRingCentral(numbers[0].number)
       }
-    }
-    else {
+    } else {
       this.showNumbers(numbers, sms)
     }
   }
@@ -145,7 +142,7 @@ class HoverHandler {
 
   loading = isLoading => {
     if (isLoading) {
-      let {tooltip} = this.getRCTooltip()
+      let { tooltip } = this.getRCTooltip()
       let dom = tooltip.querySelector(`.${RCBTNCLS}`)
       dom.appendChild(
         createLoading()
@@ -162,18 +159,16 @@ class HoverHandler {
 
   hideRCBtn = _.debounce(() => {
     this.currentRow = null
-    let {tooltip} = this.getRCTooltip()
+    let { tooltip } = this.getRCTooltip()
     tooltip.setAttribute('style', 'display:none')
   }, 200)
 
   tryRMEvents = () => {
     document.removeEventListener('mouseenter', this.handleAddRCBtn, true)
   }
-
 }
 
-
-function processHover(config) {
+function processHover (config) {
   return new HoverHandler(config)
 }
 

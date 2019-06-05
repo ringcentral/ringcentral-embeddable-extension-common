@@ -1,7 +1,6 @@
-import {parsePhoneNumberFromString} from 'libphonenumber-js'
-import _ from 'lodash'
-import {callIconSvg, smsIconSvg, rcIconSvg} from './rc-icons'
-import {thirdPartyConfigs} from './app-config'
+import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import { callIconSvg, smsIconSvg, rcIconSvg } from './rc-icons'
+import { thirdPartyConfigs } from './app-config'
 
 export const RCBTNCLS = 'call-with-ringccentral-btn'
 export const RCBTNCLS2 = 'call-with-rc-btn'
@@ -12,7 +11,7 @@ export const lsKeys = {
   apiKeyLSKey: APIKEYLS
 }
 export const host = getHost()
-export const isIframe = inIframe ()
+export const isIframe = inIframe()
 
 const phoneFormat = 'US'
 
@@ -24,19 +23,19 @@ function inIframe () {
   }
 }
 
-function getHost() {
-  let {host, protocol} = location
+function getHost () {
+  let { host, protocol } = window.location
   return `${protocol}//${host}`
 }
 
-export function formatPhone(phone, country = phoneFormat) {
+export function formatPhone (phone, country = phoneFormat) {
   let res = parsePhoneNumberFromString(phone, country)
   return res ? res.formatInternational() : phone
 }
 
 let msgHandler1
 let msgHandler2
-export function notify(msg, type = 'info', timer = 5000) {
+export function notify (msg, type = 'info', timer = 5000) {
   clearTimeout(msgHandler1)
   clearTimeout(msgHandler2)
   let wrap = document.getElementById('rc-msg-wrap')
@@ -59,17 +58,17 @@ export function notify(msg, type = 'info', timer = 5000) {
   }, timer)
 }
 
-export function checkPhoneNumber(phone, country = 'US') {
+export function checkPhoneNumber (phone, country = 'US') {
   return parsePhoneNumberFromString(phone, country)
 }
 
-export function createElementFromHTML(htmlString) {
+export function createElementFromHTML (htmlString) {
   var div = document.createElement('div')
   div.innerHTML = htmlString.trim()
   return div.firstChild
 }
 
-export function sendMsgToRCIframe(data) {
+export function sendMsgToRCIframe (data) {
   if (isIframe) {
     return window.top.postMessage({
       type: 'rc-message-proxy',
@@ -80,7 +79,7 @@ export function sendMsgToRCIframe(data) {
   dom && dom.contentWindow.postMessage(data, '*')
 }
 
-export function popup() {
+export function popup () {
   if (window._rc_is_no_spa) {
     return popupBg()
   }
@@ -94,8 +93,7 @@ export function popup() {
   }, '*')
 }
 
-
-export function smsWithRingCentral(phoneNumber, text = '') {
+export function smsWithRingCentral (phoneNumber, text = '') {
   if (window._rc_is_no_spa) {
     return smsWithRingCentralBg(phoneNumber, text)
   }
@@ -107,7 +105,7 @@ export function smsWithRingCentral(phoneNumber, text = '') {
   })
 }
 
-export function callWithRingCentral(phoneNumber, callAtOnce = true) {
+export function callWithRingCentral (phoneNumber, callAtOnce = true) {
   if (window._rc_is_no_spa) {
     return callWithRingCentralBg(phoneNumber, callAtOnce)
   }
@@ -128,7 +126,7 @@ setInterval(() => {
   })
 }, 1000)
 
-export function dirtyLoop(checker, callback) {
+export function dirtyLoop (checker, callback) {
   events.push({
     checker, callback
   })
@@ -140,7 +138,7 @@ export function dirtyLoop(checker, callback) {
  * @param {String} className
  * @return {Boolean}
  */
-export function findParentBySel(node, sel) {
+export function findParentBySel (node, sel) {
   if (!node) {
     return false
   }
@@ -165,7 +163,7 @@ export function findParentBySel(node, sel) {
   return res
 }
 
-export function createPhoneList(phoneNumbers, cls = 'rc-call-dds') {
+export function createPhoneList (phoneNumbers, cls = 'rc-call-dds') {
   if (!phoneNumbers || phoneNumbers.length < 2) {
     return ''
   }
@@ -213,8 +211,8 @@ export const createCallBtnHtml = (
   `
 }
 
-export function onClickPhoneNumber(e, sms = false) {
-  let {target} = e
+export function onClickPhoneNumber (e, sms = false) {
+  let { target } = e
   let p = findParentBySel(target, '.rc-call-dd')
   if (!p) {
     return
@@ -230,7 +228,7 @@ export function onClickPhoneNumber(e, sms = false) {
 /**
  * register event handler which will auto destroy after fisrt run
  */
-export function once(requestId, callback) {
+export function once (requestId, callback) {
   let func = e => {
     if (
       e.data &&
@@ -244,23 +242,23 @@ export function once(requestId, callback) {
   window.addEventListener('message', func)
 }
 
-export function addRuntimeEventListener(cb) {
+export function addRuntimeEventListener (cb) {
   chrome.runtime.onMessage.addListener(cb)
 }
 
-export async function sendMsgToBackground(msg) {
+export async function sendMsgToBackground (msg) {
   return new Promise(resolve => {
     chrome.runtime.sendMessage(msg, resolve)
   })
 }
 
-export function popupBg() {
+export function popupBg () {
   return sendMsgToBackground({
     action: 'popup'
   })
 }
 
-export function callWithRingCentralBg(phoneNumber, callAtOnce = true) {
+export function callWithRingCentralBg (phoneNumber, callAtOnce = true) {
   popup()
   sendMsgToBackground({
     to: 'standalone',
@@ -272,7 +270,7 @@ export function callWithRingCentralBg(phoneNumber, callAtOnce = true) {
   })
 }
 
-export function smsWithRingCentralBg(phoneNumber, text) {
+export function smsWithRingCentralBg (phoneNumber, text) {
   popup()
   sendMsgToBackground({
     to: 'standalone',
@@ -283,4 +281,3 @@ export function smsWithRingCentralBg(phoneNumber, text) {
     }
   })
 }
-

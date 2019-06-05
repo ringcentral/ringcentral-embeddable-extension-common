@@ -2,11 +2,11 @@
  * fetch with background
  */
 
-import {sendMsgToBackground} from './helpers'
+import { sendMsgToBackground } from './helpers'
 import _ from 'lodash'
-import {jsonHeader} from './fetch'
+import { jsonHeader } from './fetch'
 
-function defaultOptions(options) {
+function defaultOptions (options) {
   return {
     method: 'get',
     headers: jsonHeader,
@@ -37,6 +37,5 @@ export default function (url, options) {
     })
     .catch(e => {
       console.log(e)
-      return
     })
 }

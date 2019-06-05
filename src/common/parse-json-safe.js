@@ -4,7 +4,7 @@
 export default str => {
   try {
     return JSON.parse(str)
-  } catch(e) {
+  } catch (e) {
     console.log(e.stack)
     return str
   }

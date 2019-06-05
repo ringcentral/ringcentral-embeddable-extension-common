@@ -7,13 +7,13 @@ export const jsonHeader = {
   'Content-Type': 'application/json'
 }
 
-function parseResponse(response) {
+function parseResponse (response) {
   let contentType = response.headers.get('content-type') || ''
   let isJsonResult = contentType.toLowerCase().indexOf('application/json') !== -1
   return isJsonResult ? response.json() : response.text()
 }
 
-export async function handleErr(res) {
+export async function handleErr (res) {
   console.log(res)
   let text = _.isFunction(res.text)
     ? await res.text()
@@ -29,29 +29,28 @@ export async function handleErr(res) {
 }
 
 export default class Fetch {
-
-  static get(url, options) {
+  static get (url, options) {
     return Fetch.connect(url, 'get', null, options)
   }
 
-  static post(url, data, options) {
+  static post (url, data, options) {
     return Fetch.connect(url, 'post', data, options)
   }
 
-  static delete(url, data, options) {
+  static delete (url, data, options) {
     return Fetch.connect(url, 'delete', data, options)
   }
 
-  static put(url, data, options) {
+  static put (url, data, options) {
     return Fetch.connect(url, 'put', data, options)
   }
 
-  static patch(url, data, options) {
+  static patch (url, data, options) {
     return Fetch.connect(url, 'patch', data, options)
   }
 
-  //todo jsonp if needed
-  static connect(url, method, data, options = {}) {
+  // todo jsonp if needed
+  static connect (url, method, data, options = {}) {
     let body = {
       method,
       body: data
@@ -61,7 +60,7 @@ export default class Fetch {
       timeout: 180000,
       ...options
     }
-    return fetch(url, body)
+    return window.fetch(url, body)
       .then(res => {
         if (res.status > 304) {
           throw res
@@ -71,4 +70,3 @@ export default class Fetch {
       .then(options.handleResponse || parseResponse, options.handleErr || handleErr)
   }
 }
-

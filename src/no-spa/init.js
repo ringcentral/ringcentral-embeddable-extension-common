@@ -1,5 +1,4 @@
 
-
 import initThirdPartyApi from './third-party-api'
 import insertClickToCall from '../feat/insert-click-to-call-button'
 import addHoverEvent from '../feat/hover-to-show-call-button'
@@ -10,8 +9,7 @@ import {
   once
 } from '../common/helpers'
 
-function registerService(config) {
-
+function registerService (config) {
   // initStandaloneWidgets button
   initStandaloneWidgets(config)
 
@@ -26,18 +24,16 @@ function registerService(config) {
 
   // convert phonenumber text to click-to-dial link
   convertPhoneLink(config)
-
 }
 
 export default (config) => {
-
   window._rc_is_no_spa = true
   return () => {
     addRuntimeEventListener(
-      function(request, sender, sendResponse) {
+      function (request, sender, sendResponse) {
         if (request.to === 'content') {
           window.postMessage(request.data, '*')
-          let {requestId} = request.data
+          let { requestId } = request.data
           if (requestId) {
             once(requestId, sendResponse)
           } else {

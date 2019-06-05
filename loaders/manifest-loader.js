@@ -2,7 +2,7 @@
  * loaders to output
  */
 
-module.exports = function(source) {
+module.exports = function (source) {
   if (this.cacheable) this.cacheable()
   if (source.includes('"gecko"')) {
     this.emitFile(
@@ -18,4 +18,3 @@ module.exports = function(source) {
 
   return '{}'
 }
-

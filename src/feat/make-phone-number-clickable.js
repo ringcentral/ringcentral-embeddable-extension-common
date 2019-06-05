@@ -11,7 +11,7 @@ import {
 
 import C2D from '../common/click-to-dial-inject'
 
-function processLink(config) {
+function processLink (config) {
   let conf = {
     onCallClick: callWithRingCentral,
     onSmsClick: smsWithRingCentral,

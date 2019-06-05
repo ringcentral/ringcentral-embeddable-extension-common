@@ -13,8 +13,8 @@ import {
   RCBTNCLS2
 } from '../common/helpers'
 
-class insertHandler {
-  constructor(config) {
+class InsertHandler {
+  constructor (config) {
     this.config = config
     let {
       shouldAct
@@ -29,11 +29,11 @@ class insertHandler {
     let {
       parentsToInsertButton
     } = this.config
-    let {length} = parentsToInsertButton
+    let { length } = parentsToInsertButton
     let res = {
       elem: null
     }
-    for (let i = 0;i < length;i ++) {
+    for (let i = 0; i < length; i++) {
       let pc = parentsToInsertButton[i]
       res.elem = pc.getElem()
       res.insertMethod = pc.insertMethod
@@ -52,9 +52,9 @@ class insertHandler {
     return !!parent.querySelector('.' + RCBTNCLS2)
   }
 
-  //in contact call tab try add call with ringcentral button
+  // in contact call tab try add call with ringcentral button
   tryAddCallBtn = async () => {
-    let {href} = location
+    let { href } = window.location
     let {
       shouldAct,
       getContactPhoneNumbers
@@ -80,7 +80,7 @@ class insertHandler {
   }
 
   addCallWithRingCentralButton = (phoneNumbers) => {
-    let {elem, insertMethod} = this.getParentDom()
+    let { elem, insertMethod } = this.getParentDom()
     if (!elem) {
       return
     }
@@ -93,8 +93,7 @@ class insertHandler {
     call.addEventListener('click', (e) => {
       if (phoneNumbers.length === 1) {
         return callWithRingCentral(phoneNumbers[0].number)
-      }
-      else {
+      } else {
         this.type = 'call'
         callByRingCentralBtn.classList.remove('rc-hide-dd')
       }
@@ -105,8 +104,7 @@ class insertHandler {
     sms.addEventListener('click', (e) => {
       if (phoneNumbers.length === 1) {
         return smsWithRingCentral(phoneNumbers[0].number)
-      }
-      else {
+      } else {
         this.type = 'sms'
         callByRingCentralBtn.classList.remove('rc-hide-dd')
       }
@@ -119,11 +117,10 @@ class insertHandler {
       elem.childNodes[0]
     )
   }
-
 }
 
-function processInsert(config) {
-  return new insertHandler(config)
+function processInsert (config) {
+  return new InsertHandler(config)
 }
 
 export default (config) => {
