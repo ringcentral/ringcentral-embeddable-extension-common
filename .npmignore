@@ -6,3 +6,5 @@
 /test/
 /screenshots/
 .eslintrc
+.babelrc
+/bin/
