@@ -28,9 +28,9 @@ function getHost () {
   return `${protocol}//${host}`
 }
 
-export function formatPhone (phone, country = phoneFormat) {
+export function formatPhone (phone = '', country = phoneFormat, format = 'formatInternational') {
   let res = parsePhoneNumberFromString(phone, country)
-  return res ? res.formatInternational() : phone
+  return res ? res[format]() : phone
 }
 
 let msgHandler1
