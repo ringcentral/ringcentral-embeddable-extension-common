@@ -29,7 +29,7 @@ export default function (url, options) {
     }
   })
     .then(r => {
-      if (r.type === 'error') {
+      if (r && r.type === 'error') {
         console.log(r.stack)
         return
       }

@@ -5,8 +5,27 @@
 
 import _ from 'lodash'
 
+let glob = {
+  urlWhiteList: []
+}
+
 let standaloneWindow
 let activeTabIds = new Set()
+
+function parseResponse (response) {
+  let contentType = response.headers.get('content-type') || ''
+  let isJsonResult = contentType.toLowerCase().indexOf('application/json') !== -1
+  return isJsonResult ? response.json() : response.text()
+}
+
+function checkUrl (url) {
+  for (let i = 0, len = glob.urlWhiteList.length; i < len; i++) {
+    if (glob.urlWhiteList[i].test(url)) {
+      return true
+    }
+  }
+  return false
+}
 
 /**
  * check should show active icon for tab
@@ -165,7 +184,10 @@ function oauth (data) {
   })
 }
 
-export default function initBackground (checkTabFunc) {
+export default function initBackground (checkTabFunc, urlWhiteList) {
+  if (urlWhiteList) {
+    glob.urlWhiteList = urlWhiteList
+  }
   checkTab = checkTabFunc
   chrome.tabs.onCreated.addListener(tab => {
     onTabEvent(tab, 'add')
@@ -228,6 +250,19 @@ export default function initBackground (checkTabFunc) {
       sendResponse({
         widgetsFocused: standaloneWindow && standaloneWindow.focused
       })
+    } else if (action === 'fetch') {
+      if (!checkUrl(data.url)) {
+        return true
+      }
+      window.fetch(data.url, data.options)
+        .then(parseResponse)
+        .then(sendResponse)
+        .catch(e => sendResponse({
+          stack: e.stack,
+          message: e.message,
+          type: 'error'
+        }))
+      return true
     }
   })
 
