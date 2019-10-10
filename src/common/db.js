@@ -36,6 +36,9 @@ function getDbSchema () {
       phoneNumbers: {
         dataType: 'array'
       },
+      emails: {
+        dataType: 'array'
+      },
       phoneNumbersForSearch: {
         dataType: 'string'
       },
