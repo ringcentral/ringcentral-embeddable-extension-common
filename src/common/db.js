@@ -62,7 +62,7 @@ function initJsStore () {
 
 export async function remove () {
   await initJsStore()
-  await connection.remove({
+  return connection.remove({
     from: tableName
   })
 }
@@ -92,7 +92,7 @@ export async function insert (itemOritems) {
     ? itemOritems
     : [itemOritems]
   await initJsStore()
-  await connection.insert({
+  return connection.insert({
     into: tableName,
     values: items
   })
