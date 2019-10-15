@@ -17,7 +17,7 @@ const {
 } = thirdPartyConfigs
 
 const dbName = appName.replace(/-/g, '_')
-const tableName = 'Contact'
+export const tableName = 'Contact'
 
 function getDbSchema () {
   const tblContact = {
@@ -56,7 +56,7 @@ export const connection = new JsStore.Instance()
 
 const databaseConf = getDbSchema()
 
-function initJsStore () {
+export function initJsStore () {
   return connection.initDb(databaseConf)
 }
 
