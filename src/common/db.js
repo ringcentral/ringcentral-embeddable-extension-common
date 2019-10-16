@@ -164,13 +164,7 @@ export async function match (phoneNumbers, page = 1) {
     if (!prev[key]) {
       prev[key] = []
     }
-    let res = {
-      id: it.id, // id to identify third party contact
-      type: serviceName, // need to same as service name
-      name: it.name,
-      phoneNumbers: it.phoneNumbers
-    }
-    prev[key].push(res)
+    prev[key].push(it)
     return prev
   }, {})
 }
