@@ -13,10 +13,10 @@ const {
   appName,
   dbSchema = {},
   pageSize = 100,
-  serviceName
+  dbNameFix = ''
 } = thirdPartyConfigs
 
-const dbName = appName.replace(/-/g, '_')
+const dbName = appName.replace(/-/g, '_') + dbNameFix
 export const tableName = 'Contact'
 
 function getDbSchema () {
