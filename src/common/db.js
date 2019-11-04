@@ -8,7 +8,7 @@ import {
   formatPhone
 } from './helpers'
 
-const { JsStore } = window
+import * as JsStore from 'jsstore'
 const {
   appName,
   dbSchema = {},
