@@ -134,6 +134,9 @@ async function onTabEvent (_tab, action) {
   let tab = _.isPlainObject(_tab)
     ? _tab
     : await getTabFromId(_tab).catch(() => {})
+  if (!tab) {
+    tab = {}
+  }
   let { id } = tab
   if (
     checkTab(tab)

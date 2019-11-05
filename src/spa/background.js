@@ -47,6 +47,9 @@ async function cb (tabId) {
         reject(e)
       }
     }).catch(() => {})
+  if (!tab) {
+    tab = {}
+  }
   if (
     checkTab(tab)
   ) {
