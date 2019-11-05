@@ -30,15 +30,15 @@ export default (config) => {
   window._rc_is_no_spa = true
   return () => {
     addRuntimeEventListener(
-      function (request, sender, sendResponse) {
+      async function (request, sender, sendResponse) {
         if (request.to === 'content') {
-          window.postMessage(request.data, '*')
           let { requestId } = request.data
           if (requestId) {
             once(requestId, sendResponse)
           } else {
-            sendResponse()
+            sendResponse(Promise.resolve('ok'))
           }
+          window.postMessage(request.data, '*')
         }
       }
     )

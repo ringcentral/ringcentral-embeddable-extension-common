@@ -49,11 +49,11 @@ export default async function initThirdPartyApi (config) {
         type: 'rc-adapter-register-third-party-service',
         service: services
       })
-      if (!inited) {
-        inited = true
-        window.addEventListener('message', handleRCEvents)
-        config.initThirdParty && config.initThirdParty()
-      }
     }
   })
+  if (!inited) {
+    inited = true
+    window.addEventListener('message', handleRCEvents)
+    config.initThirdParty && config.initThirdParty()
+  }
 }

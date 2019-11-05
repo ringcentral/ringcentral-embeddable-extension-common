@@ -247,6 +247,7 @@ export function addRuntimeEventListener (cb) {
 }
 
 export async function sendMsgToBackground (msg) {
+  window.postMessage(msg)
   return new Promise(resolve => {
     chrome.runtime.sendMessage(msg, resolve)
   })

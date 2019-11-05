@@ -96,10 +96,14 @@ function getStandaloneWindowTab () {
 }
 
 function sendMsgToTab (tab, data) {
-  return new Promise((resolve) => {
-    chrome.tabs.sendMessage(tab.id, data, function (response) {
-      resolve(response)
-    })
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.tabs.sendMessage(tab.id, data, function (response) {
+        resolve(response)
+      })
+    } catch (e) {
+      reject(e)
+    }
   })
 }
 
@@ -114,8 +118,15 @@ async function sendMsgToStandAlone (data) {
 async function sendMsgToContent (data) {
   let res = {}
   for (let id of activeTabIds) {
-    let response = await sendMsgToTab({ id }, data)
-    res[id] = response
+    let response = await sendMsgToTab({ id }, {
+      data,
+      to: 'content'
+    }).catch(e => {
+      console.log(e.stack, e)
+    })
+    if (response) {
+      res[id] = response
+    }
   }
   return res
 }
@@ -215,7 +226,7 @@ export default function initBackground (checkTabFunc, urlWhiteList) {
     }
   })
 
-  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
     let {
       to,
       data,

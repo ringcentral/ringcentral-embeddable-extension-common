@@ -30,10 +30,10 @@ function onMsg (e) {
 function init () {
   window.addEventListener('message', onMsg)
   chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
+    async function (request, sender, sendResponse) {
       if (request.to === 'standalone') {
         sendMsg(request.data)
-        sendResponse()
+        sendResponse(Promise.resolve('ok'))
       }
     }
   )
