@@ -39,6 +39,7 @@ export default async function initThirdPartyApi (config) {
     }
     let { type } = data
     if (type === 'rc-standalone-init') {
+      config.initThirdParty && config.initThirdParty()
       const postMessage = data => {
         sendMsgToBackground({
           to: 'standalone',
