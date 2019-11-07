@@ -102,14 +102,12 @@ export async function search (keyword, page = 1) {
   const q = {
     where: {
       name: {
-        regex: new RegExp(keyword.replace(/\//g, '\\/'))
+        regex: new RegExp(_.escapeRegExp(keyword))
       },
       or: {
         phoneNumbersForSearch: {
           regex: new RegExp(
-            keyword
-              .replace(/\//g, '\\/')
-              .replace(/\(|\)|-/g, '')
+            _.escapeRegExp(keyword)
           )
         }
       }
@@ -136,7 +134,7 @@ export async function match (phoneNumbers, page = 1) {
     formatNumbersMap: {}
   })
   const ns = formatedNumbers
-    .map(d => d.replace('+', '\\+'))
+    .map(d => _.escapeRegExp(d))
     .join('|')
   const q = {
     where: {
