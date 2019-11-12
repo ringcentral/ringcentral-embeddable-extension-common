@@ -1,7 +1,7 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import { callIconSvg, smsIconSvg, rcIconSvg } from './rc-icons'
 import { thirdPartyConfigs } from './app-config'
-
+import _ from 'lodash'
 export const RCBTNCLS = 'call-with-ringccentral-btn'
 export const RCBTNCLS2 = 'call-with-rc-btn'
 export const RCTOOLTIPCLS = 'rc-tooltip'
@@ -28,7 +28,11 @@ function getHost () {
   return `${protocol}//${host}`
 }
 
-export function formatPhone (phone = '', country = phoneFormat, format = 'formatInternational') {
+export function formatPhone (
+  phone = '',
+  country = _.get(window, 'rc.countryCode') || phoneFormat,
+  format = 'formatInternational'
+) {
   let res = parsePhoneNumberFromString(phone, country)
   return res ? res[format]() : phone
 }
@@ -58,7 +62,10 @@ export function notify (msg, type = 'info', timer = 5000) {
   }, timer)
 }
 
-export function checkPhoneNumber (phone, country = 'US') {
+export function checkPhoneNumber (
+  phone,
+  country = _.get(window, 'rc.countryCode') || phoneFormat
+) {
   return parsePhoneNumberFromString(phone, country)
 }
 
