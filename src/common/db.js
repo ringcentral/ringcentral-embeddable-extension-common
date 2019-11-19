@@ -157,6 +157,9 @@ export async function match (phoneNumbers, page = 1) {
         formatPhone(n.phoneNumber)
       )
     })
+    if (!phone) {
+      return prev
+    }
     let num = phone.phoneNumber
     let key = formatNumbersMap[formatPhone(num)]
     if (!prev[key]) {
