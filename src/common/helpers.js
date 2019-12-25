@@ -75,7 +75,10 @@ export function createElementFromHTML (htmlString) {
   return div.firstChild
 }
 
-export function sendMsgToRCIframe (data) {
+export function sendMsgToRCIframe (data, isEngageVoice = false) {
+  if (isEngageVoice || window.is_engage_voice) {
+    return sendMsgToRCIframeEngageVoice(data)
+  }
   if (isIframe) {
     return window.top.postMessage({
       type: 'rc-message-proxy',
@@ -83,6 +86,17 @@ export function sendMsgToRCIframe (data) {
     }, '*')
   }
   let dom = document.querySelector(`#${thirdPartyConfigs.serviceName}-rc-adapter-frame`)
+  dom && dom.contentWindow.postMessage(data, '*')
+}
+
+function sendMsgToRCIframeEngageVoice (data) {
+  if (isIframe) {
+    return window.top.postMessage({
+      type: 'rc-message-proxy',
+      data
+    }, '*')
+  }
+  let dom = document.querySelector(`#generic-engage-voice-widget iframe`)
   dom && dom.contentWindow.postMessage(data, '*')
 }
 
@@ -117,11 +131,21 @@ export function callWithRingCentral (phoneNumber, callAtOnce = true) {
     return callWithRingCentralBg(phoneNumber, callAtOnce)
   }
   popup()
-  sendMsgToRCIframe({
-    type: 'rc-adapter-new-call',
-    phoneNumber,
-    toCall: callAtOnce
-  })
+
+  const data = window.is_engage_voice
+    ? {
+      type: 'MessageTransport-push',
+      payload: {
+        type: 'rc-ev-clickToDial',
+        phoneNumber
+      }
+    } : {
+      type: 'rc-adapter-new-call',
+      phoneNumber,
+      toCall: callAtOnce
+    }
+  console.log('calling', data)
+  sendMsgToRCIframe(data, window.is_engage_voice)
 }
 
 let events = []
