@@ -54,7 +54,7 @@ export default (config) => {
       const data = e.data
       if (
         data &&
-        (data.type === 'rc-adapter-pushAdapterState' || data.type === 'rc-ev-pushAdapterState') &&
+        (data.type === 'rc-adapter-pushAdapterState' || data.type === 'rc-ev-init') &&
         registered === false
       ) {
         registered = true
