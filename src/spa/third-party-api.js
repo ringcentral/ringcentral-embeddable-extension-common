@@ -27,13 +27,25 @@ export default async function initThirdPartyApi (config) {
   }
   const {
     services,
-    handleRCEvents
+    handleRCEvents,
+    isEngageVoice
   } = thirdPartyConfig
 
-  sendMsgToRCIframe({
-    type: 'rc-adapter-register-third-party-service',
-    service: services
-  })
+  if (isEngageVoice) {
+    console.log('reg service')
+    sendMsgToRCIframe({
+      type: 'MessageTransport-push',
+      payload: {
+        type: 'rc-ev-register',
+        service: services
+      }
+    })
+  } else {
+    sendMsgToRCIframe({
+      type: 'rc-adapter-register-third-party-service',
+      service: services
+    })
+  }
 
   // init
   window.addEventListener('message', handleRCEvents)

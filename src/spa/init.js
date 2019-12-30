@@ -52,7 +52,11 @@ export default (config) => {
     }
     window.addEventListener('message', function (e) {
       const data = e.data
-      if (data && data.type === 'rc-adapter-pushAdapterState' && registered === false) {
+      if (
+        data &&
+        (data.type === 'rc-adapter-pushAdapterState' || data.type === 'rc-ev-init') &&
+        registered === false
+      ) {
         registered = true
         registerService(config)
       }
