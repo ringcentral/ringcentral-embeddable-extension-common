@@ -52,7 +52,7 @@ function getDbSchema () {
   return db
 }
 
-export const connection = new JsStore.Instance()
+export const connection = new JsStore.Connection()
 
 const databaseConf = getDbSchema()
 
@@ -71,15 +71,15 @@ export async function remove () {
  * fetch contacts by page number from 0
  * @param {number} page
  */
-export async function getByPage (page = 1) {
+export async function getByPage (page = 1, _pageSize = pageSize) {
   await initJsStore()
   let count = await connection.select({
     from: tableName
   })
   let result = await connection.select({
     from: tableName,
-    limit: pageSize,
-    skip: (page - 1) * pageSize
+    limit: _pageSize,
+    skip: (page - 1) * _pageSize
   })
   return {
     count: count.length,
