@@ -87,13 +87,14 @@ export async function getByPage (page = 1, _pageSize = pageSize) {
   }
 }
 
-export async function insert (itemOritems) {
+export async function insert (itemOritems, upsert = true) {
   const items = _.isArray(itemOritems)
     ? itemOritems
     : [itemOritems]
   await initJsStore()
   return connection.insert({
     into: tableName,
+    upsert,
     values: items
   })
 }
