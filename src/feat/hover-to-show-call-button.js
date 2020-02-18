@@ -6,6 +6,7 @@
  */
 
 import _ from 'lodash'
+import { createPopper } from '@popperjs/core'
 import {
   dirtyLoop,
   findParentBySel,
@@ -22,6 +23,7 @@ import {
 } from '../common/helpers'
 import createLoading from '../common/loading'
 
+const LENMAX = 200
 class HoverHandler {
   constructor (config) {
     this.config = config
@@ -60,22 +62,27 @@ class HoverHandler {
     }
     this.currentRow = dom
     let { tooltip } = this.getRCTooltip()
-    tooltip.setAttribute('style', this.buildStyle(e, dom))
+    tooltip.setAttribute('style', `display:block;`)
+    createPopper(this.currentRow, tooltip, {
+      placement: 'top'
+    })
   }, 200)
 
   /**
    * build tooltip postition style from event
    * @param {*} e
    */
-  buildStyle = (e, dom) => {
+  buildStyle = (e, dom, isList) => {
     let { clientX } = e
     let {
-      top
+      top, left, right
     } = dom.getBoundingClientRect()
     if (clientX > window.innerWidth - 120) {
       clientX = window.innerWidth - 120
     }
-    return `left:${clientX + 3}px;top:${top - 5}px;display:block;`
+    const l = isList ? 0 : clientX + 3
+    const t = isList ? top + 34 : top - 5
+    return `left:${l}px;top:${t}px;display:block;`
   }
 
   /**
