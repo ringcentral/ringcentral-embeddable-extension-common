@@ -100,17 +100,17 @@ function sendMsgToRCIframeEngageVoice (data) {
   dom && dom.contentWindow.postMessage(data, '*')
 }
 
-export function popup () {
-  if (window._rc_is_no_spa) {
+export function popup (minimized = false) {
+  if (window._rc_is_no_spa && !minimized) {
     return popupBg()
   }
   sendMsgToRCIframe({
     type: 'rc-adapter-syncMinimized',
-    minimized: false
+    minimized
   })
   window.top.postMessage({
     type: 'rc-adapter-syncMinimized',
-    minimized: false
+    minimized
   }, '*')
 }
 
