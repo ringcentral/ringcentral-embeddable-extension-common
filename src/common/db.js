@@ -100,6 +100,9 @@ export async function insert (itemOritems, upsert = true) {
 }
 
 export async function search (keyword, page = 1) {
+  if (!keyword) {
+    return []
+  }
   const q = {
     where: {
       name: {
@@ -124,7 +127,11 @@ export async function search (keyword, page = 1) {
   })
 }
 
-export async function match (phoneNumbers, page = 1) {
+export async function match (_phoneNumbers, page = 1) {
+  const phoneNumbers = _phoneNumbers.filter(p => p)
+  if (_.isEmpty(phoneNumbers)) {
+    return {}
+  }
   let { formatedNumbers, formatNumbersMap } = phoneNumbers.reduce((prev, n) => {
     let nn = formatPhone(n)
     prev.formatedNumbers.push(nn)
