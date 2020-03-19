@@ -10,7 +10,8 @@ import {
   callWithRingCentral,
   smsWithRingCentral,
   onClickPhoneNumber,
-  RCBTNCLS2
+  RCBTNCLS2,
+  meetingWithRingCentral
 } from '../common/helpers'
 
 class InsertHandler {
@@ -89,6 +90,8 @@ class InsertHandler {
     )
     let call = callByRingCentralBtn.querySelector('.rc-widget-c2d-icon')
     let sms = callByRingCentralBtn.querySelector('.rc-widget-c2sms-icon')
+    let meet = callByRingCentralBtn.querySelector('.rc-widget-c2meeting-icon')
+    meet.addEventListener('click', meetingWithRingCentral)
     let dd = callByRingCentralBtn.querySelector('.rc-call-dds')
     call.addEventListener('click', (e) => {
       if (phoneNumbers.length === 1) {

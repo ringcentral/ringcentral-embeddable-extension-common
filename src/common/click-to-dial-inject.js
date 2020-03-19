@@ -4,7 +4,7 @@
 
 import { findNumbers } from 'libphonenumber-js'
 import './click-to-dial-inject.styl'
-import { callIconSvg, smsIconSvg, rcIconSvg } from './rc-icons'
+import { callIconSvg, smsIconSvg, rcIconSvg, meetingIconSvg } from './rc-icons'
 import { findParentBySel, checkPhoneNumber } from './helpers'
 
 function isTelLinkNode (node) {
@@ -52,6 +52,7 @@ const RC_C2D_MENU_HEIGHT = 30
 
 class ClickToDialInject {
   constructor ({
+    onMeetingClick,
     onSmsClick,
     onCallClick,
     isTelNode = isTelLinkNode,
@@ -61,6 +62,7 @@ class ClickToDialInject {
     this.getPhoneNumber = getPhoneNumber
     this.selector = selector
     this._onSmsClick = onSmsClick
+    this._onMeetingClick = onMeetingClick
     this._onCallClick = onCallClick
     this.isTelNode = isTelNode
     this._elemObserver = null
@@ -152,11 +154,19 @@ class ClickToDialInject {
   </div>`
   }
 
+  c2meetingMenu = () => {
+    return `<div class="rc-widget-c2d-separator-line"></div>
+    <div class="rc-widget-action-icon rc-widget-c2meeting-icon" title="Schedule meeting with RingCentral">
+    ${meetingIconSvg()}
+  </div>`
+  }
+
   _injectC2DMenu = () => {
     if (this._c2dMenuEl) {
       return
     }
     let c2smsMenu = this._onSmsClick ? this.c2smsMenu() : ''
+    let c2meetingMenu = this._onMeetingClick ? this.c2meetingMenu() : ''
     this._c2dMenuEl = document.createElement(RC_C2D_ELEM_TAGNAME)
     this._c2dMenuEl.innerHTML = `
       <div class="rc-widget-c2d-menu-wrapper">
@@ -167,6 +177,7 @@ class ClickToDialInject {
           ${callIconSvg()}
         </div>
         ${c2smsMenu}
+        ${c2meetingMenu}
       </div>
       <div class="rc-widget-c2d-arrow">
         <div class="rc-widget-c2d-inner-arrow"></div>
@@ -184,6 +195,8 @@ class ClickToDialInject {
 
     this._smsBtn = this._c2dMenuEl.querySelector('.rc-widget-c2sms-icon')
     this._smsBtn && this._smsBtn.addEventListener('click', () => this.onSmsClick())
+    this._meetBtn = this._c2dMenuEl.querySelector('.rc-widget-c2meeting-icon')
+    this._meetBtn && this._meetBtn.addEventListener('click', () => this.onMeetingClick())
     document.body.appendChild(this._c2dMenuEl)
   }
 
@@ -249,6 +262,10 @@ class ClickToDialInject {
 
   onSmsClick = () => {
     this._onSmsClick(this._currentNumber)
+  }
+
+  onMeetingClick = () => {
+    this._onMeetingClick()
   }
 }
 

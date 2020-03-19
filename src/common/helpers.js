@@ -1,5 +1,5 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
-import { callIconSvg, smsIconSvg, rcIconSvg } from './rc-icons'
+import { callIconSvg, smsIconSvg, rcIconSvg, meetingIconSvg } from './rc-icons'
 import { thirdPartyConfigs } from './app-config'
 import _ from 'lodash'
 export const RCBTNCLS = 'call-with-ringccentral-btn'
@@ -126,6 +126,17 @@ export function smsWithRingCentral (phoneNumber, text = '') {
   })
 }
 
+export function meetingWithRingCentral () {
+  if (window._rc_is_no_spa) {
+    return meetingWithRingCentralBg()
+  }
+  popup()
+  sendMsgToRCIframe({
+    type: 'rc-adapter-navigate-to',
+    path: '/meeting'
+  })
+}
+
 export function callWithRingCentral (phoneNumber, callAtOnce = true) {
   if (window._rc_is_no_spa) {
     return callWithRingCentralBg(phoneNumber, callAtOnce)
@@ -237,6 +248,10 @@ export const createCallBtnHtml = (
       <div class="rc-widget-action-icon rc-widget-c2sms-icon" title="SMS with RingCentral">
         ${smsIconSvg()}
       </div>
+      <div class="rc-widget-c2d-separator-line"></div>
+      <div class="rc-widget-action-icon rc-widget-c2meeting-icon" title="Schedule meeting with RingCentral">
+        ${meetingIconSvg()}
+      </div>
       ${createPhoneList(phoneNumbers)}
     </span>
   `
@@ -310,6 +325,17 @@ export function smsWithRingCentralBg (phoneNumber, text) {
       type: 'rc-adapter-new-sms',
       phoneNumber,
       text
+    }
+  })
+}
+
+export function meetingWithRingCentralBg (phoneNumber, text) {
+  popup()
+  sendMsgToBackground({
+    to: 'standalone',
+    data: {
+      type: 'rc-adapter-navigate-to',
+      path: '/meeting'
     }
   })
 }
