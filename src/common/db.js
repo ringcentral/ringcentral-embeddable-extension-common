@@ -99,14 +99,14 @@ export async function insert (itemOritems, upsert = true) {
   })
 }
 
-export async function search (keyword, page = 1) {
+export async function search (keyword, page = 1, per = pageSize) {
   if (!keyword) {
-    return []
+    per = 100
   }
   const q = {
     where: {
       name: {
-        regex: new RegExp(_.escapeRegExp(keyword))
+        regex: new RegExp(_.escapeRegExp(keyword), 'i')
       },
       or: {
         phoneNumbersForSearch: {
@@ -120,9 +120,9 @@ export async function search (keyword, page = 1) {
   await initJsStore()
   return connection.select({
     from: tableName,
-    limit: pageSize,
+    limit: per,
     ignoreCase: true,
-    skip: (page - 1) * pageSize,
+    skip: (page - 1) * per,
     ...q
   })
 }

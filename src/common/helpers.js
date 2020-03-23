@@ -135,6 +135,10 @@ export function meetingWithRingCentral () {
     type: 'rc-adapter-navigate-to',
     path: '/meeting'
   })
+  sendMsgToRCIframe({
+    type: 'rc-adapter-navigate-to',
+    path: '/meeting/home'
+  })
 }
 
 export function callWithRingCentral (phoneNumber, callAtOnce = true) {
