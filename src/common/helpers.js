@@ -133,11 +133,7 @@ export function meetingWithRingCentral () {
   popup()
   sendMsgToRCIframe({
     type: 'rc-adapter-navigate-to',
-    path: '/meeting'
-  })
-  sendMsgToRCIframe({
-    type: 'rc-adapter-navigate-to',
-    path: '/meeting/home'
+    path: '/meeting/schedule'
   })
 }
 
@@ -339,7 +335,7 @@ export function meetingWithRingCentralBg (phoneNumber, text) {
     to: 'standalone',
     data: {
       type: 'rc-adapter-navigate-to',
-      path: '/meeting'
+      path: '/meeting/schedule'
     }
   })
 }
