@@ -43,5 +43,6 @@ html(lang='en')
     #app
       header#header
         img#logo(src='./header_logo.svg')
-      iframe#rc-widget-adapter-frame(src!='https://ringcentral.github.io/ringcentral-embeddable/app.html' + appConfigQuery, sandbox='allow-same-origin allow-scripts allow-forms allow-popups', allow='microphone')
+      - const url = _global.appUrl || 'https://ringcentral.github.io/ringcentral-embeddable/app.html'
+      iframe#rc-widget-adapter-frame(src=appUrl + appConfigQuery, sandbox='allow-same-origin allow-scripts allow-forms allow-popups', allow='microphone')
     script(src='./app.js?' + version)
