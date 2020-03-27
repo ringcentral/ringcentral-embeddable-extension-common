@@ -91,7 +91,7 @@ class InsertHandler {
     let call = callByRingCentralBtn.querySelector('.rc-widget-c2d-icon')
     let sms = callByRingCentralBtn.querySelector('.rc-widget-c2sms-icon')
     let meet = callByRingCentralBtn.querySelector('.rc-widget-c2meeting-icon')
-    meet.addEventListener('click', meetingWithRingCentral)
+    meet.addEventListener('click', this.config.onClickMeeting || meetingWithRingCentral)
     let dd = callByRingCentralBtn.querySelector('.rc-call-dds')
     call.addEventListener('click', (e) => {
       if (phoneNumbers.length === 1) {
