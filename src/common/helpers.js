@@ -63,7 +63,7 @@ export function notify (msg, type = 'info', timer = 5000) {
 }
 
 export function checkPhoneNumber (
-  phone,
+  phone = '',
   country = _.get(window, 'rc.countryCode') || phoneFormat
 ) {
   return parsePhoneNumberFromString(phone, country)
