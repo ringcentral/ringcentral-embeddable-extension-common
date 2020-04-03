@@ -75,7 +75,7 @@ class InsertHandler {
       return
     }
     let phoneNumbers = await getContactPhoneNumbers()
-    if (phoneNumbers.length) {
+    if (phoneNumbers && phoneNumbers.length) {
       this.addCallWithRingCentralButton(phoneNumbers)
     }
   }
