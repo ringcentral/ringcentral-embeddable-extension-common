@@ -46,11 +46,18 @@ class InsertHandler {
   }
 
   isButtonInserted = () => {
-    let parent = this.getParentDom().elem
-    if (!parent) {
-      return false
+    let all = document.querySelectorAll('.' + RCBTNCLS2)
+    if (all.length > 1) {
+      let arr = Array.from(all)
+      let i = 0
+      for (let ele of arr) {
+        if (i !== 0) {
+          ele.remove()
+        }
+        i++
+      }
     }
-    return !!parent.querySelector('.' + RCBTNCLS2)
+    return all.length
   }
 
   // in contact call tab try add call with ringcentral button

@@ -159,19 +159,29 @@ export function callWithRingCentral (phoneNumber, callAtOnce = true) {
   sendMsgToRCIframe(data, window.is_engage_voice)
 }
 
-let events = []
-setInterval(() => {
-  events.forEach(ev => {
-    if (ev.checker(window.location.href)) {
-      ev.callback()
-    }
-  })
-}, 1000)
-
 export function dirtyLoop (checker, callback) {
-  events.push({
-    checker, callback
-  })
+  // Select the node that will be observed for mutations
+  const targetNode = document.body
+
+  // Options for the observer (which mutations to observe)
+  const config = {
+    attributes: false,
+    childList: true,
+    subtree: true
+  }
+
+  // Callback function to execute when mutations are observed
+  const cb = function (mutationsList, observer) {
+    if (checker(window.location.href)) {
+      callback()
+    }
+  }
+
+  // Create an observer instance linked to the callback function
+  const observer = new MutationObserver(cb)
+
+  // Start observing the target node for configured mutations
+  observer.observe(targetNode, config)
 }
 
 /**
