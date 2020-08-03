@@ -33,7 +33,7 @@ export function formatPhone (
   country = _.get(window, 'rc.countryCode') || phoneFormat,
   format = 'formatInternational'
 ) {
-  let res = parsePhoneNumberFromString(phone, country)
+  let res = parsePhoneNumberFromString(phone.replace('*', '#'), country)
   return res ? res[format]() : phone
 }
 
@@ -96,7 +96,7 @@ function sendMsgToRCIframeEngageVoice (data) {
       data
     }, '*')
   }
-  let dom = document.querySelector(`#engage-voice-embeddable iframe`)
+  let dom = document.querySelector(`#generic-engage-voice-widget iframe`)
   dom && dom.contentWindow.postMessage(data, '*')
 }
 
