@@ -114,7 +114,8 @@ export function popup (minimized = false) {
   }, '*')
 }
 
-export function smsWithRingCentral (phoneNumber, text = '') {
+export function smsWithRingCentral (_phoneNumber, text = '') {
+  const phoneNumber = _phoneNumber.replace('ext.', '#')
   if (window._rc_is_no_spa) {
     return smsWithRingCentralBg(phoneNumber, text)
   }
@@ -137,7 +138,8 @@ export function meetingWithRingCentral () {
   })
 }
 
-export function callWithRingCentral (phoneNumber, callAtOnce = true) {
+export function callWithRingCentral (_phoneNumber, callAtOnce = true) {
+  const phoneNumber = _phoneNumber.replace('ext.', '#')
   if (window._rc_is_no_spa) {
     return callWithRingCentralBg(phoneNumber, callAtOnce)
   }
