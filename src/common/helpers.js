@@ -96,7 +96,7 @@ function sendMsgToRCIframeEngageVoice (data) {
       data
     }, '*')
   }
-  let dom = document.querySelector(`#generic-engage-voice-widget iframe`)
+  let dom = document.querySelector(`#engage-voice-embeddable iframe`)
   dom && dom.contentWindow.postMessage(data, '*')
 }
 
