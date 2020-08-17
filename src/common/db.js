@@ -127,7 +127,7 @@ export async function search (keyword, page = 1, per = pageSize) {
   })
 }
 
-export async function match (_phoneNumbers, page = 1, limit) {
+export async function match (_phoneNumbers, limit = 100) {
   const phoneNumbers = _phoneNumbers.filter(p => p)
   if (_.isEmpty(phoneNumbers)) {
     return {}
@@ -154,9 +154,8 @@ export async function match (_phoneNumbers, page = 1, limit) {
   await initJsStore()
   const res = await connection.select({
     from: tableName,
-    limit: limit || pageSize,
+    limit,
     ignoreCase: true,
-    skip: (page - 1) * pageSize,
     ...q
   })
   return res.reduce((prev, it) => {
