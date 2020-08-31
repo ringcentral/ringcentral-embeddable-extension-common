@@ -73,7 +73,7 @@ export async function remove () {
  */
 export async function getByPage (page = 1, _pageSize = pageSize) {
   await initJsStore()
-  let count = await connection.select({
+  let count = await connection.count({
     from: tableName
   })
   let result = await connection.select({
@@ -82,7 +82,7 @@ export async function getByPage (page = 1, _pageSize = pageSize) {
     skip: (page - 1) * _pageSize
   })
   return {
-    count: count.length,
+    count,
     result
   }
 }
