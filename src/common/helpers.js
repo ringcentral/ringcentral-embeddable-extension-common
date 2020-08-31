@@ -123,7 +123,8 @@ export function smsWithRingCentral (_phoneNumber, text = '') {
   sendMsgToRCIframe({
     type: 'rc-adapter-new-sms',
     phoneNumber,
-    text
+    text,
+    conversation: true
   })
 }
 
