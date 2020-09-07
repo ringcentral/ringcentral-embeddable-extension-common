@@ -62,9 +62,9 @@ export function initJsStore () {
 
 export async function remove () {
   await initJsStore()
-  return connection.remove({
-    from: tableName
-  })
+  return connection.clear(
+    tableName
+  )
 }
 
 /**
