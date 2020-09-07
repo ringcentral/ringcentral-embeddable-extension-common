@@ -7,8 +7,8 @@ import _ from 'lodash'
 import {
   formatPhone
 } from './helpers'
+import Dexie from 'dexie'
 
-import * as JsStore from 'jsstore'
 const {
   appName,
   dbSchema = {},
@@ -45,26 +45,19 @@ function getDbSchema () {
       ...dbSchema
     }
   }
+  const str = ['id', 'name','phoneNumbersForSearch'].join(',')
   const db = {
-    name: dbName,
-    tables: [tblContact]
+    [tableName]: str
   }
   return db
 }
 
-export const connection = new JsStore.Connection()
-
 const databaseConf = getDbSchema()
-
-export function initJsStore () {
-  return connection.initDb(databaseConf)
-}
+const db = new Dexie(dbName)
+db.version(1).stores(databaseConf)
 
 export async function remove () {
-  await initJsStore()
-  return connection.clear(
-    tableName
-  )
+  return db[tableName].clear()
 }
 
 /**
@@ -72,15 +65,11 @@ export async function remove () {
  * @param {number} page
  */
 export async function getByPage (page = 1, _pageSize = pageSize) {
-  await initJsStore()
-  let count = await connection.count({
-    from: tableName
-  })
-  let result = await connection.select({
-    from: tableName,
-    limit: _pageSize,
-    skip: (page - 1) * _pageSize
-  })
+  let count = await db[tableName].count()
+  let result = await db[tableName]
+    .limit(_pageSize)
+    .offset((page - 1) * _pageSize)
+    .toArray()
   return {
     count,
     result
@@ -91,40 +80,26 @@ export async function insert (itemOritems, upsert = true) {
   const items = _.isArray(itemOritems)
     ? itemOritems
     : [itemOritems]
-  await initJsStore()
-  return connection.insert({
-    into: tableName,
-    upsert,
-    values: items
-  })
+  return upsert
+    ? db[tableName].bulkPut(items)
+    : db[tableName].bulkAdd(items)
+
 }
 
 export async function search (keyword, page = 1, per = pageSize) {
   if (!keyword) {
     per = 100
+    return []
   }
-  const q = {
-    where: {
-      name: {
-        regex: new RegExp(_.escapeRegExp(keyword), 'i')
-      },
-      or: {
-        phoneNumbersForSearch: {
-          regex: new RegExp(
-            _.escapeRegExp(keyword)
-          )
-        }
-      }
-    }
-  }
-  await initJsStore()
-  return connection.select({
-    from: tableName,
-    limit: per,
-    ignoreCase: true,
-    skip: (page - 1) * per,
-    ...q
-  })
+  const reg = new RegExp(_.escapeRegExp(keyword), 'i')
+  return db[tableName]
+    .offset((page - 1) * per)
+    .limit(per)
+    .where('name')
+    .startsWith(keyword)
+    .or('phoneNumbersForSearch')
+    .startsWith(keyword)
+    .toArray()
 }
 
 export async function match (_phoneNumbers, limit = 100) {
@@ -144,20 +119,13 @@ export async function match (_phoneNumbers, limit = 100) {
   const ns = formatedNumbers
     .map(d => _.escapeRegExp(d))
     .join('|')
-  const q = {
-    where: {
-      phoneNumbersForSearch: {
-        regex: new RegExp(ns)
-      }
-    }
-  }
-  await initJsStore()
-  const res = await connection.select({
-    from: tableName,
-    limit,
-    ignoreCase: true,
-    ...q
-  })
+  const reg = new RegExp(ns)
+  const res = await db[tableName]
+    .limit(limit)
+    .filter(inst => {
+      return reg.test(inst.phoneNumbersForSearch)
+    })
+    .toArray()
   return res.reduce((prev, it) => {
     let phone = _.find(it.phoneNumbers, n => {
       return formatedNumbers.includes(
