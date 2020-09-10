@@ -21,7 +21,7 @@ export default async function initThirdPartyApi (config) {
   if (!config.thirdPartyServiceConfig) {
     return
   }
-  let thirdPartyConfig = config.thirdPartyServiceConfig(serviceName)
+  let thirdPartyConfig = await config.thirdPartyServiceConfig(serviceName)
   if (!thirdPartyConfig) {
     return
   }
