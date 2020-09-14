@@ -11,7 +11,7 @@ import Dexie from 'dexie'
 
 const {
   appName,
-  dbSchema = {},
+  // dbSchema = {},
   pageSize = 100,
   dbNameFix = ''
 } = thirdPartyConfigs
@@ -20,32 +20,32 @@ const dbName = appName.replace(/-/g, '_') + dbNameFix
 export const tableName = 'Contact'
 
 function getDbSchema () {
-  const tblContact = {
-    name: tableName,
-    columns: {
-      id: {
-        primaryKey: true,
-        dataType: 'string'
-      },
-      type: {
-        dataType: 'string'
-      },
-      name: {
-        dataType: 'string'
-      },
-      phoneNumbers: {
-        dataType: 'array'
-      },
-      emails: {
-        dataType: 'array'
-      },
-      phoneNumbersForSearch: {
-        dataType: 'string'
-      },
-      ...dbSchema
-    }
-  }
-  const str = ['id', 'name','phoneNumbersForSearch'].join(',')
+  // const tblContact = {
+  //   name: tableName,
+  //   columns: {
+  //     id: {
+  //       primaryKey: true,
+  //       dataType: 'string'
+  //     },
+  //     type: {
+  //       dataType: 'string'
+  //     },
+  //     name: {
+  //       dataType: 'string'
+  //     },
+  //     phoneNumbers: {
+  //       dataType: 'array'
+  //     },
+  //     emails: {
+  //       dataType: 'array'
+  //     },
+  //     phoneNumbersForSearch: {
+  //       dataType: 'string'
+  //     },
+  //     ...dbSchema
+  //   }
+  // }
+  const str = ['id', 'name', 'phoneNumbersForSearch'].join(',')
   const db = {
     [tableName]: str
   }
@@ -83,7 +83,6 @@ export async function insert (itemOritems, upsert = true) {
   return upsert
     ? db[tableName].bulkPut(items)
     : db[tableName].bulkAdd(items)
-
 }
 
 export async function search (keyword, page = 1, per = pageSize) {
@@ -91,14 +90,13 @@ export async function search (keyword, page = 1, per = pageSize) {
     per = 100
     return []
   }
-  const reg = new RegExp(_.escapeRegExp(keyword), 'i')
   return db[tableName]
-    .offset((page - 1) * per)
-    .limit(per)
     .where('name')
     .startsWith(keyword)
     .or('phoneNumbersForSearch')
     .startsWith(keyword)
+    .offset((page - 1) * per)
+    .limit(per)
     .toArray()
 }
 
