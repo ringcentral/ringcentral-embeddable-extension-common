@@ -60,13 +60,14 @@ export default class Fetch {
       timeout: 180000,
       ...options
     }
+    const resultHandler = options.parseResponse || function (res) {
+      if (res.status > 304) {
+        throw res
+      }
+      return res
+    }
     return window.fetch(url, body)
-      .then(res => {
-        if (res.status > 304) {
-          throw res
-        }
-        return res
-      })
+      .then(resultHandler)
       .then(options.handleResponse || parseResponse, options.handleErr || handleErr)
   }
 }
