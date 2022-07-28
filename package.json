@@ -1,10 +1,12 @@
 {
   "name": "ringcentral-embeddable-extension-common",
-  "version": "0.12.3",
-  "description": "Cli tool to create a RingCentral Embeddable Voice chrome extension for sites.",
+  "version": "1.0.0-beta.1",
+  "main": "./src/index.js",
+  "description": "Common modules for creating ringcentral embeddable extensions",
   "scripts": {
     "lint": "./node_modules/.bin/standard",
-    "fix": "./node_modules/.bin/standard --fix"
+    "fix": "./node_modules/.bin/standard --fix",
+    "beta": "npm publish --tag beta"
   },
   "repository": {
     "type": "git",
@@ -23,28 +25,39 @@
   },
   "homepage": "https://github.com/ringcentral/ringcentral-embeddable-extension-common#readme",
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/plugin-proposal-decorators": "^7.4.4",
-    "@babel/plugin-proposal-json-strings": "^7.2.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
-    "babel-eslint": "10.0.1",
-    "mocha": "5.2.0",
-    "shelljs": "^0.8.3",
-    "standard": "^12.0.1"
+    "antd": "^4.21.7",
+    "jest": "^28.1.2",
+    "standard": "^16.0.4"
   },
   "standard": {
-    "parser": "babel-eslint",
+    "ignore": [
+      "temp"
+    ],
     "globals": [
       "chrome",
       "MutationObserver"
     ]
   },
+  "files": [
+    "loaders",
+    "tools",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
-    "@popperjs/core": "^2.11.0",
-    "dexie": "^3.2.0",
-    "libphonenumber-js": "1.9.44",
-    "lodash": "^4.17.21"
+    "@ant-design/icons": "^4.7.0",
+    "@popperjs/core": "^2.11.5",
+    "axios": "^0.27.2",
+    "libphonenumber-js": "^1.10.9",
+    "lodash": "^4.17.21",
+    "nanoid": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.5",
+    "replace-in-file": "^6.3.5"
+  },
+  "peerDependencies": {
+    "antd": "^4.21.7"
   }
 }

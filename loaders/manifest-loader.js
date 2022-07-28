@@ -1,20 +1,14 @@
 /**
- * loaders to output
+ * loaders to output manifest.json
  */
 
-module.exports = function (source) {
+function manifestLoader (source) {
   if (this.cacheable) this.cacheable()
-  if (source.includes('"gecko"')) {
-    this.emitFile(
-      '../dist-firefox/manifest.json',
-      source
-    )
-  } else {
-    this.emitFile(
-      'manifest.json',
-      source
-    )
-  }
-
+  this.emitFile(
+    'manifest.json',
+    source
+  )
   return '{}'
 }
+
+module.exports = manifestLoader
